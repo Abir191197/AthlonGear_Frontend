@@ -1,10 +1,12 @@
+import Navbar from "./Navbar";
 
 const LandingPage = () => {
     return (
         <div>
-            hello
+           <Navbar></Navbar>
         </div>
     );
 };
 
 export default LandingPage;
+
