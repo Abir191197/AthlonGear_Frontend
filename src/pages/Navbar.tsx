@@ -1,13 +1,12 @@
-
-import { Disclosure} from "@headlessui/react";
+import { Disclosure } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
-import {  ShoppingBagIcon } from "@heroicons/react/20/solid";
-
-
+import { ShoppingBagIcon } from "@heroicons/react/20/solid";
 
 export default function Navbar() {
-  return (
-    <Disclosure as="nav" className="bg-white shadow">
+  return  (
+    <Disclosure
+
+    >
       {({ open }) => (
         <>
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -24,7 +23,7 @@ export default function Navbar() {
                     )}
                   </Disclosure.Button>
                 </div>
-                <div className="flex flex-shrink-0 items-center ">
+                <div className="flex flex-shrink-0 items-center">
                   <img
                     className="block h-8 w-auto lg:hidden"
                     src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
@@ -37,7 +36,6 @@ export default function Navbar() {
                   />
                 </div>
                 <div className="px-72 hidden md:ml-6 md:flex md:space-x-8">
-                  {/* Current: "border-indigo-500 text-gray-900", Default: "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700" */}
                   <a
                     href="#"
                     className="inline-flex items-center border-b-2 border-indigo-500 px-1 pt-1 text-sm font-medium text-gray-900">
@@ -75,14 +73,12 @@ export default function Navbar() {
                     </a>
                   </div>
                 </div>
-               
               </div>
             </div>
           </div>
 
           <Disclosure.Panel className="md:hidden">
             <div className="space-y-1 pb-3 pt-2">
-              {/* Current: "bg-indigo-50 border-indigo-500 text-indigo-700", Default: "border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700" */}
               <Disclosure.Button
                 as="a"
                 href="#"
@@ -108,7 +104,6 @@ export default function Navbar() {
                 About Us
               </Disclosure.Button>
             </div>
-           
           </Disclosure.Panel>
         </>
       )}
