@@ -1,16 +1,20 @@
 
-import Featured from "./Featured";
+
 import HeroSection from "./HeroSection";
 import Navbar from "./Navbar";
+import Product from "./Product";
+import Products from "./Products";
+
 
 const LandingPage = () => {
     return (
       <div>
-            <Navbar></Navbar>
-        <HeroSection></HeroSection>
+            {/* <Navbar></Navbar>
+       <HeroSection></HeroSection> */}
+      
+        <Products></Products>
+        <Product></Product>
         
-            <Featured></Featured>
-            
             
       </div>
     );
