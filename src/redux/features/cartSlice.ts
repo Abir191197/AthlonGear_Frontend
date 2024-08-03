@@ -50,4 +50,9 @@ export default cartSlice.reducer;
 
 // Selector to get the number of items in the cart
 export const selectCartItemCount = (state: { cart: CartState }) =>
-  state.cart.carts.length;
+    state.cart.carts.length;
+
+
+// Selector to check if an item is in the cart
+export const selectIsItemInCart = (state: { cart: CartState }, itemId: string) =>
+  state.cart.carts.some((item) => item._id === itemId);
