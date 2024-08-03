@@ -7,7 +7,7 @@ const LandingPage = () => {
   return (
     <div>
       <Navbar></Navbar>
-      {/* <HeroSection></HeroSection> */}
+       <HeroSection></HeroSection> 
       
       <Products></Products>
      

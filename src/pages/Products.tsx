@@ -18,6 +18,7 @@ export interface Product {
   stock: number;
   rating: number;
   price: number;
+  quantity: number;
 }
 
 function classNames(...classes: string[]) {

@@ -49,10 +49,38 @@ const cartSlice = createSlice({
     clearCart: (state) => {
       state.carts = [];
     },
+    IncreaseQuantity: (state, action: PayloadAction<{ _id: string }>) => {
+      const itemId = action.payload._id;
+      const existingItem = state.carts.find((item) => item._id === itemId);
+
+      if (existingItem) {
+        // Increase quantity if it's less than the stock count
+        if (existingItem.quantity < existingItem.stock) {
+          existingItem.quantity += 1;
+        }
+      }
+    },
+    DecreaseQuantity: (state, action: PayloadAction<{ _id: string }>) => {
+      const itemId = action.payload._id;
+      const existingItem = state.carts.find((item) => item._id === itemId);
+
+      if (existingItem) {
+        // Decrease quantity but not below 1
+        if (existingItem.quantity > 1) {
+          existingItem.quantity -= 1;
+        }
+      }
+    },
   },
 });
 
-export const { addItem, removeItem, clearCart } = cartSlice.actions;
+export const {
+  addItem,
+  removeItem,
+  clearCart,
+  IncreaseQuantity,
+  DecreaseQuantity,
+} = cartSlice.actions;
 export default cartSlice.reducer;
 
 // Selector to get the number of items in the cart
