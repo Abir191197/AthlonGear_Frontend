@@ -2,7 +2,7 @@ import {
   CheckIcon,
   ClockIcon,
   QuestionMarkCircleIcon,
-  XMarkIcon,
+ 
 } from "@heroicons/react/20/solid";
 import { Link, ScrollRestoration } from "react-router-dom";
 import Navbar from "./Navbar";
@@ -13,6 +13,7 @@ import {
   removeItem,
 } from "../redux/features/cartSlice";
 import { toast } from "react-toastify";
+import { TrashIcon } from "@heroicons/react/24/outline";
 
 export default function Cart() {
   const dispatch = useAppDispatch();
@@ -67,6 +68,9 @@ export default function Cart() {
               <p className="mt-4 text-sm text-gray-600">
                 Looks like you haven't added anything to your cart yet.
               </p>
+              <button className="mt-20 px-6 py-2 bg-green-300 text-black font-bold uppercase tracking-wide rounded">
+                <Link to="/">Shop Now</Link>
+              </button>
             </div>
           ) : (
             <form className="mt-12 lg:grid lg:grid-cols-12 lg:items-start lg:gap-x-12 xl:gap-x-16">
@@ -144,7 +148,7 @@ export default function Cart() {
                                 onClick={() => handleRemoveItem(item)}
                                 className="-m-2 inline-flex p-2 text-gray-400 hover:text-gray-500">
                                 <span className="sr-only">Remove</span>
-                                <XMarkIcon
+                                <TrashIcon
                                   className="h-5 w-5"
                                   aria-hidden="true"
                                 />
@@ -216,7 +220,7 @@ export default function Cart() {
                   </div>
                   <div className="flex items-center justify-between border-t border-gray-200 pt-4">
                     <dt className="flex text-sm text-gray-600">
-                      <span>Tax estimate</span>
+                      <span>Tax and 15% GST estimate</span>
                       <a
                         href="#"
                         className="ml-2 flex-shrink-0 text-gray-400 hover:text-gray-500">
@@ -234,6 +238,23 @@ export default function Cart() {
                     </dd>
                   </div>
                   <div className="flex items-center justify-between border-t border-gray-200 pt-4">
+                    <dt className="flex text-sm text-gray-600">
+                      <span>Shipping Charge</span>
+                      <a className="ml-2 flex-shrink-0 text-gray-400 hover:text-gray-500">
+                        <span className="sr-only">
+                          Learn more about how tax is calculated
+                        </span>
+                        <QuestionMarkCircleIcon
+                          className="h-5 w-5"
+                          aria-hidden="true"
+                        />
+                      </a>
+                    </dt>
+                    <dd className="text-sm font-semibold text-gray-900">
+                      Added in next step
+                    </dd>
+                  </div>
+                  <div className="flex items-center justify-between border-t border-gray-200 pt-4">
                     <dt className="text-base font-medium text-gray-900">
                       Order total
                     </dt>
@@ -242,16 +263,16 @@ export default function Cart() {
                     </dd>
                   </div>
                   <dd className="text-base font-semibold text-green-600">
-                    Total You Save  {discount.toFixed(2)} $
+                    Total You Save {discount.toFixed(2)} $
                   </dd>
                 </dl>
 
                 <div className="mt-6">
-                  <button
-                    type="submit"
+                  <Link
+                    to={`/CheckOut`}
                     className="w-full rounded-md border border-transparent bg-indigo-600 px-4 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-50">
                     Checkout
-                  </button>
+                  </Link>
                 </div>
               </section>
             </form>

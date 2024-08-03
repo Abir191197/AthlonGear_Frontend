@@ -11,6 +11,7 @@ import { useGetOneProductQuery } from "../redux/api/baseApi";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import { addItem, CartItem } from "../redux/features/cartSlice";
 import { toast } from "react-toastify";
+import { SyncLoader } from "react-spinners";
 
 
 function classNames(...classes: string[]) {
@@ -19,7 +20,7 @@ function classNames(...classes: string[]) {
 
 export default function Product() {
   const { id } = useParams();
-  const { data } = useGetOneProductQuery(id);
+  const { data,isLoading } = useGetOneProductQuery(id);
   
   const dispatch = useAppDispatch();
   const cartItems = useAppSelector((state) => state.cart.carts);
@@ -50,6 +51,24 @@ export default function Product() {
       });
     }
   };
+  if (isLoading) {
+    return (
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+        }}>
+        <SyncLoader
+          
+          size={20}
+          aria-label="Loading Spinner"
+          data-testid="loader"
+        />
+      </div>
+    );
+  }
 
   return (
     <>

@@ -6,6 +6,8 @@ import { Link } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import { addItem, CartItem } from "../redux/features/cartSlice";
 import { toast } from "react-toastify";
+import { SyncLoader } from "react-spinners";
+
 
 // types.ts or within Products.tsx
 export interface Product {
@@ -26,9 +28,26 @@ function classNames(...classes: string[]) {
 }
 
 export default function Products() {
-  const { data } = useGetProductsQuery(undefined);
+  const { data, isLoading } = useGetProductsQuery(undefined);
   const dispatch = useAppDispatch();
   const cartItems = useAppSelector((state) => state.cart.carts);
+
+  if (isLoading) {
+    return (
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          height: "100vh",
+        }}>
+        <SyncLoader
+          size={15}
+          aria-label="Loading Spinner"
+          data-testid="loader"
+        />
+      </div>
+    );
+  }
 
   const handleAddItem = (item: CartItem) => {
     const existingItem = cartItems.find(
