@@ -26,7 +26,7 @@ export default function Product() {
 
   const handleAddItem = (item: CartItem) => {
     const existingItem = cartItems.find((cartItem) => cartItem._id === id);
-console.log(existingItem);
+
     if (existingItem && existingItem.quantity >= existingItem.stock) {
       toast.error(`Cannot add more of ${item.title}. Stock limit reached.`, {
         position: "top-center",
