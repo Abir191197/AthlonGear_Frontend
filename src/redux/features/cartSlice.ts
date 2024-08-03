@@ -10,6 +10,7 @@ export interface CartItem {
   stock: number;
   rating: number;
   price: number;
+  quantity: number; // Added quantity property
 }
 
 export interface CartState {
@@ -26,12 +27,18 @@ const cartSlice = createSlice({
   reducers: {
     addItem: (state, action: PayloadAction<CartItem>) => {
       const item = action.payload;
-      // Check if the item already exists in the cart
-      const itemExists = state.carts.some(
+      const existingItem = state.carts.find(
         (cartItem) => cartItem._id === item._id
       );
-      if (!itemExists) {
-        state.carts.push(item);
+
+      if (existingItem) {
+        // If the item already exists, increase the quantity up to the stock count
+        if (existingItem.quantity < existingItem.stock) {
+          existingItem.quantity += 1;
+        }
+      } else {
+        // If the item does not exist, add it to the cart with quantity 1
+        state.carts.push({ ...item, quantity: 1 });
       }
     },
     removeItem: (state, action: PayloadAction<{ _id: string }>) => {
@@ -50,9 +57,10 @@ export default cartSlice.reducer;
 
 // Selector to get the number of items in the cart
 export const selectCartItemCount = (state: { cart: CartState }) =>
-    state.cart.carts.length;
-
+  state.cart.carts.length;
 
 // Selector to check if an item is in the cart
-export const selectIsItemInCart = (state: { cart: CartState }, itemId: string) =>
-  state.cart.carts.some((item) => item._id === itemId);
+export const selectIsItemInCart = (
+  state: { cart: CartState },
+  itemId: string
+) => state.cart.carts.some((item) => item._id === itemId);

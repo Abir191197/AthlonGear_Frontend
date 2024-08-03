@@ -1,35 +1,55 @@
-
 import {
   CheckIcon,
   QuestionMarkCircleIcon,
   StarIcon,
-  tagIcon,
 } from "@heroicons/react/20/solid";
-import { ShieldCheckIcon, TagIcon } from "@heroicons/react/24/outline";
+import { ShieldCheckIcon } from "@heroicons/react/24/outline";
 
 import Navbar from "./Navbar";
 import { ScrollRestoration, useParams } from "react-router-dom";
 import { useGetOneProductQuery } from "../redux/api/baseApi";
+import { useAppDispatch, useAppSelector } from "../redux/hooks";
+import { addItem, CartItem } from "../redux/features/cartSlice";
+import { toast } from "react-toastify";
 
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
 }
 
-
-
 export default function Product() {
- 
   const { id } = useParams();
-  
-
   const { data } = useGetOneProductQuery(id);
+  
+  const dispatch = useAppDispatch();
+  const cartItems = useAppSelector((state) => state.cart.carts);
 
-console.log(data);
-
-
-
-
+  const handleAddItem = (item: CartItem) => {
+    const existingItem = cartItems.find((cartItem) => cartItem._id === id);
+console.log(existingItem);
+    if (existingItem && existingItem.quantity >= existingItem.stock) {
+      toast.error(`Cannot add more of ${item.title}. Stock limit reached.`, {
+        position: "top-center",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        theme: "light",
+      });
+    } else {
+      dispatch(addItem(item));
+      toast.success(`${item.title} added to cart!`, {
+        position: "top-center",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        theme: "light",
+      });
+    }
+  };
 
   return (
     <>
@@ -155,7 +175,8 @@ console.log(data);
                 </div>
                 <div className="mt-10">
                   <button
-                    type="submit"
+                    type="button"
+                    onClick={() => handleAddItem(data?.data)}
                     className="flex w-full items-center justify-center rounded-md border border-transparent bg-indigo-600 px-8 py-3 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-50">
                     Add to bag
                   </button>
@@ -180,5 +201,4 @@ console.log(data);
       </div>
     </>
   );
-     
 }

@@ -4,11 +4,11 @@ import { useGetProductsQuery } from "../redux/api/baseApi";
 import "./Products.css";
 import { Link } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
-import { addItem, CartItem, removeItem } from "../redux/features/cartSlice";
+import { addItem, CartItem } from "../redux/features/cartSlice";
 import { toast } from "react-toastify";
 
 // types.ts or within Products.tsx
-export interface product {
+export interface Product {
   _id: string;
   title: string;
   description: string;
@@ -26,19 +26,25 @@ function classNames(...classes: string[]) {
 
 export default function Products() {
   const { data } = useGetProductsQuery(undefined);
-
-  //redux code
-
-  
-  
-  
- const dispatch = useAppDispatch();
-  const cart = useAppSelector((state) => state.cart.carts);
+  const dispatch = useAppDispatch();
+  const cartItems = useAppSelector((state) => state.cart.carts);
 
   const handleAddItem = (item: CartItem) => {
-    const itemInCart = cart.some(cartItem => cartItem._id === item._id);
+    const existingItem = cartItems.find(
+      (cartItem) => cartItem._id === item._id
+    );
 
-    if (!itemInCart) {
+    if (existingItem && existingItem.quantity >= existingItem.stock) {
+      toast.error(`Cannot add more of ${item.title}. Stock limit reached.`, {
+        position: "top-center",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        theme: "light",
+      });
+    } else {
       dispatch(addItem(item));
       toast.success(`${item.title} added to cart!`, {
         position: "top-center",
@@ -49,26 +55,16 @@ export default function Products() {
         draggable: true,
         theme: "light",
       });
-    } else {
-      dispatch(removeItem({ _id: item._id }));
-      toast.info(`${item.title} removed from cart!`, {
-        position: "top-center",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        theme: "light",
-      });
     }
   };
+
   return (
     <div className="bg-white">
       <div className="mx-auto overflow-hidden sm:px-6 lg:px-8">
         <h2 className="sr-only">Products</h2>
 
         <div className="grid gap-4 grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 bg-white">
-          {data?.data?.slice(0, 12).map((product: product) => (
+          {data?.data?.slice(0, 12).map((product: Product) => (
             <div
               key={product._id}
               className="relative border-gray-400 border rounded-lg bg-zinc-200 shadow-xl mb-3 flex flex-col h-[600px] overflow-hidden">
@@ -120,18 +116,12 @@ export default function Products() {
                 <p className="text-xl font-extrabold text-gray-900 mb-4">
                   ${product.price}
                 </p>
-                <div className="h-10  flex justify-center space-x-28 ">
+                <div className="h-10 flex justify-center space-x-28">
                   <button
                     onClick={() => handleAddItem(product)}
                     type="button"
-                    className={` inline-flex items-center gap-x-1.5 rounded-md  px-4 py-2 text-sm font-semibold text-black shadow-sm  focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lime-600 ${
-                      cart.some((cartItem) => cartItem._id === product._id)
-                        ? "bg-red-600 hover:bg-red-700 "
-                        : "bg-lime-600 hover:bg-lime-700 "
-                    }`}>
-                    {cart.some((cartItem) => cartItem._id === product._id)
-                      ? "Remove"
-                      : "Cart"}
+                    className="inline-flex items-center gap-x-1.5 rounded-md px-4 py-2 text-sm font-semibold text-black shadow-sm bg-lime-600 hover:bg-lime-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lime-600">
+                    Cart
                     <ShoppingCartIcon
                       className="-mr-0.5 h-5 w-5"
                       aria-hidden="true"
