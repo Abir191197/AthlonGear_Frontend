@@ -1,12 +1,21 @@
 import { Disclosure } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import { ShoppingBagIcon } from "@heroicons/react/20/solid";
+import { Link } from "react-router-dom";
+import { useAppSelector } from "../redux/hooks";
+import { selectCartItemCount } from "../redux/features/cartSlice";
 
 export default function Navbar() {
-  return  (
-    <Disclosure
 
-    >
+
+  const cartItemCount = useAppSelector(selectCartItemCount);
+
+
+
+
+
+  return (
+    <Disclosure>
       {({ open }) => (
         <>
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -36,11 +45,11 @@ export default function Navbar() {
                   />
                 </div>
                 <div className="px-72 hidden md:ml-6 md:flex md:space-x-8">
-                  <a
-                    href="#"
+                  <Link
+                    to="/"
                     className="inline-flex items-center border-b-2 border-indigo-500 px-1 pt-1 text-sm font-medium text-gray-900">
                     Home
-                  </a>
+                  </Link>
                   <a
                     href="#"
                     className="inline-flex items-center border-b-2 border-transparent px-1 pt-1 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700">
@@ -67,7 +76,7 @@ export default function Navbar() {
                         aria-hidden="true"
                       />
                       <span className="ml-2 text-sm font-medium text-gray-700 group-hover:text-gray-800">
-                        0
+                        {cartItemCount}
                       </span>
                       <span className="sr-only">items in cart, view bag</span>
                     </a>

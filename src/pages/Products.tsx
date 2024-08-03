@@ -2,6 +2,9 @@ import { StarIcon } from "@heroicons/react/20/solid";
 import { EyeIcon, ShoppingCartIcon } from "@heroicons/react/24/outline";
 import { useGetProductsQuery } from "../redux/api/baseApi";
 import "./Products.css"; 
+import { Link } from "react-router-dom";
+import { useAppDispatch } from "../redux/hooks";
+import { addItem, CartItem } from "../redux/features/cartSlice";
 
 // types.ts or within Products.tsx
 export interface product {
@@ -28,8 +31,17 @@ function classNames(...classes: string[]) {
 export default function Products() {
 
 const { data } = useGetProductsQuery(undefined);
-console.log(data);
 
+
+  
+
+  //redux code
+  
+
+  const dispatch = useAppDispatch();
+  const handleAddItem = (item: CartItem) => {
+    dispatch(addItem(item));
+  };
 
 
 
@@ -40,7 +52,7 @@ return (
       <h2 className="sr-only">Products</h2>
 
       <div className="grid gap-4 grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 bg-white">
-        {data?.data?.map((product: product) => (
+        {data?.data?.slice(0, 12).map((product: product) => (
           <div
             key={product._id}
             className="relative border-gray-400 border rounded-lg bg-zinc-200 shadow-xl mb-3 flex flex-col h-[600px] overflow-hidden">
@@ -94,6 +106,7 @@ return (
               </p>
               <div className="flex justify-center space-x-32 mb-2">
                 <button
+                  onClick={() => handleAddItem(product)}
                   type="button"
                   className="inline-flex items-center gap-x-1.5 rounded-md bg-lime-600 px-4 py-2 text-sm font-semibold text-black shadow-sm hover:bg-lime-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lime-600">
                   Cart
@@ -102,12 +115,13 @@ return (
                     aria-hidden="true"
                   />
                 </button>
-                <button
+                <Link
+                  to={`/ProductView/${product._id}`}
                   type="button"
                   className="inline-flex items-center gap-x-1.5 rounded-md bg-orange-200 px-4 py-2 text-sm font-semibold text-black shadow-sm hover:bg-orange-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-200">
                   View
                   <EyeIcon className="-mr-0.5 h-5 w-5" aria-hidden="true" />
-                </button>
+                </Link>
               </div>
             </div>
           </div>
