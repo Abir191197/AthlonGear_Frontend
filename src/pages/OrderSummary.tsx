@@ -75,9 +75,7 @@ export default function OrderSummary() {
 
   const orderTotal = subtotal + tax - discount;
 
-
-
-//form handle with react form handler
+  //form handle with react form handler
   interface IFormInput {
     email: string;
     firstName: string;
@@ -88,28 +86,32 @@ export default function OrderSummary() {
     Country: string;
     State: string;
     Postal: string;
-    Phone:number;
+    Phone: number;
   }
 
-  const { register, handleSubmit, reset } = useForm<IFormInput>();
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<IFormInput>();
   const onSubmit: SubmitHandler<IFormInput> = (data) => {
-    
     console.log(data);
     reset();
-    
-dispatch(clearCart());
-   
-     toast.success("Order placed successfully!", {
-       position: "top-center",
-       autoClose: 3000,
-       hideProgressBar: false,
-       closeOnClick: true,
-       pauseOnHover: true,
-       draggable: true,
-       theme: "light",
-     });
-    
-  }
+console.log(cartItems);
+    dispatch(clearCart());
+
+    toast.success("Order placed successfully!", {
+      position: "top-center",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      theme: "light",
+    });
+  };
+ 
 
   return (
     <>
@@ -151,15 +153,23 @@ dispatch(clearCart());
                     </label>
                     <div className="mt-1">
                       <input
+                        type="text"
+                        id="email"
+                        autoComplete="email"
+                        className={`block w-full rounded-md shadow-sm sm:text-sm ${
+                          errors.email
+                            ? "border-red-500 focus:border-red-500 focus:ring-red-500"
+                            : "border-gray-300 focus:border-indigo-500 focus:ring-indigo-500"
+                        }`}
                         {...register("email", {
                           required: "Email is required",
                         })}
-                        type="email"
-                        id="email"
-                        name="email"
-                        autoComplete="email"
-                        className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                       />
+                      {errors.email && (
+                        <p className="mt-2 text-sm text-red-600">
+                          {errors.email.message}
+                        </p>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -177,15 +187,23 @@ dispatch(clearCart());
                       </label>
                       <div className="mt-1">
                         <input
-                          {...register("firstName", {
-                            required: "First name is required",
-                          })}
                           type="text"
                           id="firstName"
-                          name="firstName"
-                          autoComplete="given-name"
-                          className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                          autoComplete="First Name"
+                          className={`block w-full rounded-md shadow-sm sm:text-sm ${
+                            errors.firstName
+                              ? "border-red-500 focus:border-red-500 focus:ring-red-500"
+                              : "border-gray-300 focus:border-indigo-500 focus:ring-indigo-500"
+                          }`}
+                          {...register("firstName", {
+                            required: "first Name is required",
+                          })}
                         />
+                        {errors.firstName && (
+                          <p className="mt-2 text-sm text-red-600">
+                            {errors.firstName.message}
+                          </p>
+                        )}
                       </div>
                     </div>
 
@@ -197,12 +215,23 @@ dispatch(clearCart());
                       </label>
                       <div className="mt-1">
                         <input
-                          {...register("lastName")}
                           type="text"
                           id="lastName"
-                          name="lastName"
-                          className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                          autoComplete="Last Name"
+                          className={`block w-full rounded-md shadow-sm sm:text-sm ${
+                            errors.lastName
+                              ? "border-red-500 focus:border-red-500 focus:ring-red-500"
+                              : "border-gray-300 focus:border-indigo-500 focus:ring-indigo-500"
+                          }`}
+                          {...register("lastName", {
+                            required: "last Name is required",
+                          })}
                         />
+                        {errors.lastName && (
+                          <p className="mt-2 text-sm text-red-600">
+                            {errors.lastName.message}
+                          </p>
+                        )}
                       </div>
                     </div>
 
@@ -230,15 +259,23 @@ dispatch(clearCart());
                       </label>
                       <div className="mt-1">
                         <input
+                          type="text"
+                          id="Address"
+                          autoComplete="Address"
+                          className={`block w-full rounded-md shadow-sm sm:text-sm ${
+                            errors.Address
+                              ? "border-red-500 focus:border-red-500 focus:ring-red-500"
+                              : "border-gray-300 focus:border-indigo-500 focus:ring-indigo-500"
+                          }`}
                           {...register("Address", {
                             required: "Address is required",
                           })}
-                          type="text"
-                          name="Address"
-                          id="Address"
-                          autoComplete="street-address"
-                          className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                         />
+                        {errors.Address && (
+                          <p className="mt-2 text-sm text-red-600">
+                            {errors.Address.message}
+                          </p>
+                        )}
                       </div>
                     </div>
 
@@ -250,14 +287,23 @@ dispatch(clearCart());
                       </label>
                       <div className="mt-1">
                         <input
+                          type="text"
+                          id="Apartment"
+                          autoComplete="Apartment"
+                          className={`block w-full rounded-md shadow-sm sm:text-sm ${
+                            errors.Apartment
+                              ? "border-red-500 focus:border-red-500 focus:ring-red-500"
+                              : "border-gray-300 focus:border-indigo-500 focus:ring-indigo-500"
+                          }`}
                           {...register("Apartment", {
                             required: "Apartment is required",
                           })}
-                          type="text"
-                          name="Apartment"
-                          id="Apartment"
-                          className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                         />
+                        {errors.Apartment && (
+                          <p className="mt-2 text-sm text-red-600">
+                            {errors.Apartment.message}
+                          </p>
+                        )}
                       </div>
                     </div>
 
@@ -269,15 +315,23 @@ dispatch(clearCart());
                       </label>
                       <div className="mt-1">
                         <input
+                          type="text"
+                          id="City"
+                          autoComplete="City"
+                          className={`block w-full rounded-md shadow-sm sm:text-sm ${
+                            errors.City
+                              ? "border-red-500 focus:border-red-500 focus:ring-red-500"
+                              : "border-gray-300 focus:border-indigo-500 focus:ring-indigo-500"
+                          }`}
                           {...register("City", {
                             required: "City is required",
                           })}
-                          type="text"
-                          name="City"
-                          id="City"
-                          autoComplete="address-level2"
-                          className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                         />
+                        {errors.City && (
+                          <p className="mt-2 text-sm text-red-600">
+                            {errors.City.message}
+                          </p>
+                        )}
                       </div>
                     </div>
 
@@ -312,15 +366,23 @@ dispatch(clearCart());
                       </label>
                       <div className="mt-1">
                         <input
+                          type="text"
+                          id="State"
+                          autoComplete="State"
+                          className={`block w-full rounded-md shadow-sm sm:text-sm ${
+                            errors.State
+                              ? "border-red-500 focus:border-red-500 focus:ring-red-500"
+                              : "border-gray-300 focus:border-indigo-500 focus:ring-indigo-500"
+                          }`}
                           {...register("State", {
                             required: "State is required",
                           })}
-                          type="text"
-                          name="State"
-                          id="State"
-                          autoComplete="address-level1"
-                          className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                         />
+                        {errors.State && (
+                          <p className="mt-2 text-sm text-red-600">
+                            {errors.State.message}
+                          </p>
+                        )}
                       </div>
                     </div>
 
@@ -332,15 +394,23 @@ dispatch(clearCart());
                       </label>
                       <div className="mt-1">
                         <input
+                          type="text"
+                          id="Postal"
+                          autoComplete="Postal"
+                          className={`block w-full rounded-md shadow-sm sm:text-sm ${
+                            errors.Postal
+                              ? "border-red-500 focus:border-red-500 focus:ring-red-500"
+                              : "border-gray-300 focus:border-indigo-500 focus:ring-indigo-500"
+                          }`}
                           {...register("Postal", {
                             required: "Postal Code is required",
                           })}
-                          type="text"
-                          name="Postal"
-                          id="Postal"
-                          autoComplete="postal-code"
-                          className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                         />
+                        {errors.Postal && (
+                          <p className="mt-2 text-sm text-red-600">
+                            {errors.Postal.message}
+                          </p>
+                        )}
                       </div>
                     </div>
 
@@ -352,15 +422,23 @@ dispatch(clearCart());
                       </label>
                       <div className="mt-1">
                         <input
+                          type="number"
+                          id="Phone"
+                          autoComplete="Phone"
+                          className={`block w-full rounded-md shadow-sm sm:text-sm ${
+                            errors.Phone
+                              ? "border-red-500 focus:border-red-500 focus:ring-red-500"
+                              : "border-gray-300 focus:border-indigo-500 focus:ring-indigo-500"
+                          }`}
                           {...register("Phone", {
                             required: "Phone is required",
                           })}
-                          type="text"
-                          name="Phone"
-                          id="Phone"
-                          autoComplete="tel"
-                          className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                         />
+                        {errors.Phone && (
+                          <p className="mt-2 text-sm text-red-600">
+                            {errors.Phone.message}
+                          </p>
+                        )}
                       </div>
                     </div>
                   </div>
