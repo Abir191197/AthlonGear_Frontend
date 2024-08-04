@@ -5,11 +5,13 @@ import { Link, ScrollRestoration } from "react-router-dom";
 import Navbar from "./Navbar";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import {
+  clearCart,
   DecreaseQuantity,
   IncreaseQuantity,
   removeItem,
 } from "../redux/features/cartSlice";
 import { toast } from "react-toastify";
+import { useForm, SubmitHandler } from "react-hook-form";
 
 const deliveryMethods = [
   {
@@ -22,9 +24,10 @@ const deliveryMethods = [
 ];
 
 const paymentMethods = [
-  { id: "credit-card", title: "Credit card" },
-  { id: "paypal", title: "PayPal" },
-  { id: "etransfer", title: "eTransfer" },
+  { id: "cash-on", title: "Cash on Delivery" },
+  { id: "credit-card", title: "Credit card (Unavailable Now)" },
+  { id: "paypal", title: "PayPal (Unavailable Now)" },
+  { id: "Bkash", title: "Bkash (Unavailable Now)" },
 ];
 
 function classNames(...classes: string[]) {
@@ -62,21 +65,51 @@ export default function OrderSummary() {
   // Get all cart items from cart slice in Redux
   const cartItems = useAppSelector((state) => state.cart.carts);
 
- const subtotal = cartItems.reduce(
-   (total, item) => total + item.price * (item.quantity || 1),
-   0
- );
+  const subtotal = cartItems.reduce(
+    (total, item) => total + item.price * (item.quantity || 1),
+    0
+  );
 
- const discount = subtotal * 0.05; // Example discount calculation
- const tax = subtotal * 0.15; // 15% tax
+  const discount = subtotal * 0.05; // Example discount calculation
+  const tax = subtotal * 0.15; // 15% tax
 
- const orderTotal = subtotal + tax - discount;
-
-
+  const orderTotal = subtotal + tax - discount;
 
 
 
+//form handle with react form handler
+  interface IFormInput {
+    email: string;
+    firstName: string;
+    lastName: string;
+    Address: string;
+    Apartment: string;
+    City: string;
+    Country: string;
+    State: string;
+    Postal: string;
+    Phone:number;
+  }
 
+  const { register, handleSubmit, reset } = useForm<IFormInput>();
+  const onSubmit: SubmitHandler<IFormInput> = (data) => {
+    
+    console.log(data);
+    reset();
+    
+dispatch(clearCart());
+   
+     toast.success("Order placed successfully!", {
+       position: "top-center",
+       autoClose: 3000,
+       hideProgressBar: false,
+       closeOnClick: true,
+       pauseOnHover: true,
+       draggable: true,
+       theme: "light",
+     });
+    
+  }
 
   return (
     <>
@@ -87,19 +120,24 @@ export default function OrderSummary() {
           <h2 className="sr-only">Checkout</h2>
 
           {cartItems.length === 0 ? (
-            <div className="text-center">
+            <div className="text-center flex flex-col items-center">
               <h3 className="text-lg font-medium text-gray-900">
                 Your cart is empty.
               </h3>
               <p className="mt-4 text-sm text-gray-600">
                 Looks like you haven't added anything to your cart yet.
               </p>
-              <button className="mt-20 px-6 py-2 bg-green-300 text-black font-bold uppercase tracking-wide rounded">
+              <button className="mt-4 px-6 py-2 bg-green-300 text-black font-bold uppercase tracking-wide rounded">
                 <Link to="/">Shop Now</Link>
+              </button>
+              <button className="mt-4 px-6 py-2 bg-gray-300 text-black font-bold uppercase tracking-wide rounded">
+                <Link to="">Track Your Order</Link>
               </button>
             </div>
           ) : (
-            <form className="lg:grid lg:grid-cols-2 lg:gap-x-12 xl:gap-x-16">
+            <form
+              onSubmit={handleSubmit(onSubmit)}
+              className="lg:grid lg:grid-cols-2 lg:gap-x-12 xl:gap-x-16">
               <div>
                 <div>
                   <h2 className="text-lg font-medium text-gray-900">
@@ -113,9 +151,12 @@ export default function OrderSummary() {
                     </label>
                     <div className="mt-1">
                       <input
+                        {...register("email", {
+                          required: "Email is required",
+                        })}
                         type="email"
-                        id="email-address"
-                        name="email-address"
+                        id="email"
+                        name="email"
                         autoComplete="email"
                         className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                       />
@@ -136,9 +177,12 @@ export default function OrderSummary() {
                       </label>
                       <div className="mt-1">
                         <input
+                          {...register("firstName", {
+                            required: "First name is required",
+                          })}
                           type="text"
-                          id="first-name"
-                          name="first-name"
+                          id="firstName"
+                          name="firstName"
                           autoComplete="given-name"
                           className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                         />
@@ -153,16 +197,16 @@ export default function OrderSummary() {
                       </label>
                       <div className="mt-1">
                         <input
+                          {...register("lastName")}
                           type="text"
-                          id="last-name"
-                          name="last-name"
-                          autoComplete="family-name"
+                          id="lastName"
+                          name="lastName"
                           className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                         />
                       </div>
                     </div>
 
-                    <div className="sm:col-span-2">
+                    {/* <div className="sm:col-span-2">
                       <label
                         htmlFor="company"
                         className="block text-sm font-medium text-gray-700">
@@ -176,7 +220,7 @@ export default function OrderSummary() {
                           className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                         />
                       </div>
-                    </div>
+                    </div> */}
 
                     <div className="sm:col-span-2">
                       <label
@@ -186,9 +230,12 @@ export default function OrderSummary() {
                       </label>
                       <div className="mt-1">
                         <input
+                          {...register("Address", {
+                            required: "Address is required",
+                          })}
                           type="text"
-                          name="address"
-                          id="address"
+                          name="Address"
+                          id="Address"
                           autoComplete="street-address"
                           className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                         />
@@ -203,9 +250,12 @@ export default function OrderSummary() {
                       </label>
                       <div className="mt-1">
                         <input
+                          {...register("Apartment", {
+                            required: "Apartment is required",
+                          })}
                           type="text"
-                          name="apartment"
-                          id="apartment"
+                          name="Apartment"
+                          id="Apartment"
                           className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                         />
                       </div>
@@ -219,9 +269,12 @@ export default function OrderSummary() {
                       </label>
                       <div className="mt-1">
                         <input
+                          {...register("City", {
+                            required: "City is required",
+                          })}
                           type="text"
-                          name="city"
-                          id="city"
+                          name="City"
+                          id="City"
                           autoComplete="address-level2"
                           className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                         />
@@ -236,13 +289,17 @@ export default function OrderSummary() {
                       </label>
                       <div className="mt-1">
                         <select
-                          id="country"
-                          name="country"
+                          {...register("Country", {
+                            required: "Country is required",
+                          })}
+                          id="Country"
+                          name="Country"
                           autoComplete="country-name"
                           className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
-                          <option>United States</option>
-                          <option>Canada</option>
-                          <option>Mexico</option>
+                          <option value="Bangladesh">Bangladesh</option>
+                          <option value="United States">United States</option>
+                          <option value="Canada">Canada</option>
+                          <option value="Mexico">Mexico</option>
                         </select>
                       </div>
                     </div>
@@ -255,9 +312,12 @@ export default function OrderSummary() {
                       </label>
                       <div className="mt-1">
                         <input
+                          {...register("State", {
+                            required: "State is required",
+                          })}
                           type="text"
-                          name="region"
-                          id="region"
+                          name="State"
+                          id="State"
                           autoComplete="address-level1"
                           className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                         />
@@ -272,9 +332,12 @@ export default function OrderSummary() {
                       </label>
                       <div className="mt-1">
                         <input
+                          {...register("Postal", {
+                            required: "Postal Code is required",
+                          })}
                           type="text"
-                          name="postal-code"
-                          id="postal-code"
+                          name="Postal"
+                          id="Postal"
                           autoComplete="postal-code"
                           className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                         />
@@ -289,9 +352,12 @@ export default function OrderSummary() {
                       </label>
                       <div className="mt-1">
                         <input
+                          {...register("Phone", {
+                            required: "Phone is required",
+                          })}
                           type="text"
-                          name="phone"
-                          id="phone"
+                          name="Phone"
+                          id="Phone"
                           autoComplete="tel"
                           className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                         />
@@ -381,9 +447,21 @@ export default function OrderSummary() {
                             id={paymentMethod.id}
                             name="payment-method"
                             type="radio"
-                            defaultChecked={paymentMethod.id === "credit-card"}
-                            className="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                            defaultChecked={paymentMethod.id === "cash-on"}
+                            disabled={
+                              paymentMethod.id === "Bkash" ||
+                              paymentMethod.id === "paypal" ||
+                              paymentMethod.id === "credit-card"
+                            }
+                            className={`h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-500 ${
+                              paymentMethod.id === "Bkash" ||
+                              paymentMethod.id === "paypal" ||
+                              paymentMethod.id === "credit-card"
+                                ? "opacity-50 cursor-not-allowed"
+                                : ""
+                            }`}
                           />
+
                           <label
                             htmlFor={paymentMethod.id}
                             className="ml-3 block text-sm font-medium text-gray-700">
