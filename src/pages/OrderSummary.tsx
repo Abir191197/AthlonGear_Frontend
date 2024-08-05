@@ -12,6 +12,7 @@ import {
 } from "../redux/features/cartSlice";
 import { toast } from "react-toastify";
 import { useForm, SubmitHandler } from "react-hook-form";
+import { useSendOrderConfirmDataMutation } from "../redux/api/baseApi";
 
 const deliveryMethods = [
   {
@@ -39,6 +40,8 @@ export default function OrderSummary() {
     deliveryMethods[0]
   );
 
+   const [sendOrderConfirmData] =
+     useSendOrderConfirmDataMutation();
   const dispatch = useAppDispatch();
 
   const handleIncreaseQuantity = (item: { _id: string }) => {
@@ -64,6 +67,7 @@ export default function OrderSummary() {
 
   // Get all cart items from cart slice in Redux
   const cartItems = useAppSelector((state) => state.cart.carts);
+
 
   const subtotal = cartItems.reduce(
     (total, item) => total + item.price * (item.quantity || 1),
@@ -95,12 +99,22 @@ export default function OrderSummary() {
     reset,
     formState: { errors },
   } = useForm<IFormInput>();
-  const onSubmit: SubmitHandler<IFormInput> = (data) => {
-    console.log(data);
-    reset();
-console.log(cartItems);
-    dispatch(clearCart());
+  const onSubmit: SubmitHandler<IFormInput> = async (contactForm) => {
+    const cartItem = cartItems.map((item) => ({
+      productId: item._id,
+      title: item.title,
+      quantity: item.quantity,
+    }));
 
+    const orderDetails = {
+      orderTotal,
+      deliveryMethod: selectedDeliveryMethod,
+      contactForm,
+      cartItems: cartItem,
+    };
+
+  try {
+    await sendOrderConfirmData(orderDetails).unwrap();
     toast.success("Order placed successfully!", {
       position: "top-center",
       autoClose: 3000,
@@ -110,9 +124,25 @@ console.log(cartItems);
       draggable: true,
       theme: "light",
     });
-  };
- 
+  } catch (error) {
+    toast.error(`Failed to confirm order: ${error}`, {
+      position: "top-center",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      theme: "light",
+    });
+  }
 
+    reset();
+    dispatch(clearCart());
+   
+  };
+    
+   
+    
   return (
     <>
       <ScrollRestoration />
