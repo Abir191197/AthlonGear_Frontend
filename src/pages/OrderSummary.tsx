@@ -115,6 +115,7 @@ export default function OrderSummary() {
 
   try {
     await sendOrderConfirmData(orderDetails).unwrap();
+    console.log(orderDetails);
     toast.success("Order placed successfully!", {
       position: "top-center",
       autoClose: 3000,
