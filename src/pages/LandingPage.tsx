@@ -1,23 +1,32 @@
 
+import AboutUs from "./AboutUs";
+import ContactUs from "./ContactUs";
+import Footer from "./Footer";
+
 import HeroSection from "./HeroSection";
 import Navbar from "./Navbar";
 import Products from "./Products";
 
 const LandingPage = () => {
   return (
-    <div>
-      <Navbar></Navbar>
-       <HeroSection></HeroSection> 
-      
+    <>
+      <div id="Navbar">
+        <Navbar></Navbar>
+      </div>
+      <div id="HeroSection">
+        <HeroSection></HeroSection>
+      </div>
+
       <Products></Products>
-     
-    </div>
+
+      <div id="AboutUs">
+        <AboutUs></AboutUs>
+      </div>
+      <div id="ContactUs"><ContactUs></ContactUs></div>
+      <Footer></Footer>
+    </>
   );
 };
 
 export default LandingPage;
 
-//  <div className="flex justify-center mx-[600px] px-12 text-transparent bg-clip-text bg-gradient-to-r from-green-400 via-yellow-500 to-red-500">
-//    <h2 className="font-semibold text-4xl">Newest</h2>
-//    <h2 className="font-semibold text-4xl ml-2">Treasures</h2>
-//  </div>;

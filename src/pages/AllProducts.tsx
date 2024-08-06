@@ -1,15 +1,15 @@
+import { useState } from "react";
 import { StarIcon } from "@heroicons/react/20/solid";
 import { EyeIcon, ShoppingCartIcon } from "@heroicons/react/24/outline";
 import { useGetProductsQuery } from "../redux/api/baseApi";
 import "./Products.css";
-import { Link } from "react-router-dom";
+import { Link, ScrollRestoration } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import { addItem, CartItem } from "../redux/features/cartSlice";
 import { toast } from "react-toastify";
 import { SyncLoader } from "react-spinners";
+import Navbar from "./Navbar";
 
-
-// types.ts or within Products.tsx
 export interface Product {
   _id: string;
   title: string;
@@ -27,10 +27,13 @@ function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
 }
 
-export default function Products() {
+export default function AllProducts() {
   const { data, isLoading } = useGetProductsQuery(undefined);
   const dispatch = useAppDispatch();
   const cartItems = useAppSelector((state) => state.cart.carts);
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 8;
 
   if (isLoading) {
     return (
@@ -78,11 +81,25 @@ export default function Products() {
     }
   };
 
+  // Pagination logic
+  const totalItems = data?.data?.length || 0;
+  const totalPages = Math.ceil(totalItems / itemsPerPage);
+  const currentItems = data?.data?.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
+
+  const handlePageChange = (pageNumber: number) => {
+    setCurrentPage(pageNumber);
+  };
+
   return (
     <>
-      <div className="flex justify-center mx-[600px] px-12 text-transparent bg-clip-text bg-gradient-to-r from-green-400 via-yellow-500 to-red-500 mb-4">
-        <h2 className="font-semibold text-4xl">Newest</h2>
-        <h2 className="font-semibold text-4xl ml-2">Treasures</h2>
+      <Navbar />
+      <ScrollRestoration />
+      <div className="flex justify-center mx-[600px] px-12 text-transparent bg-clip-text bg-gradient-to-r from-green-400 via-black to-red-500 mb-4 mt-24">
+        <h2 className="font-semibold text-4xl">Features</h2>
+        <h2 className="font-semibold text-4xl ml-2">Items</h2>
       </div>
 
       <div className="bg-white">
@@ -90,7 +107,7 @@ export default function Products() {
           <h2 className="sr-only">Products</h2>
 
           <div className="grid gap-4 grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 bg-white">
-            {data?.data?.slice(0, 12).map((product: Product) => (
+            {currentItems?.map((product: Product) => (
               <div
                 key={product._id}
                 className="relative border-gray-400 border rounded-lg bg-zinc-200 shadow-xl mb-3 flex flex-col h-[600px] overflow-hidden">
@@ -165,10 +182,33 @@ export default function Products() {
               </div>
             ))}
           </div>
-          <div className="flex justify-center mt-8">
-            <button className="px-6 py-2 bg-green-300 text-black font-bold uppercase tracking-wide rounded">
-              <Link to="Products/AllProducts">Show All</Link>
-            </button>
+          <div className="flex justify-center mt-8 mb-8">
+            <nav className="inline-flex rounded-md shadow">
+              <button
+                onClick={() => handlePageChange(currentPage - 1)}
+                disabled={currentPage === 1}
+                className="px-3 py-2 text-gray-500 bg-white border border-gray-300 rounded-l-md hover:bg-gray-50 disabled:opacity-50">
+                Previous
+              </button>
+              {[...Array(totalPages).keys()].map((pageNumber) => (
+                <button
+                  key={pageNumber + 1}
+                  onClick={() => handlePageChange(pageNumber + 1)}
+                  className={`px-3 py-2 ${
+                    pageNumber + 1 === currentPage
+                      ? "bg-green-300 text-black"
+                      : "bg-white text-gray-500"
+                  } border border-gray-300 hover:bg-gray-50`}>
+                  {pageNumber + 1}
+                </button>
+              ))}
+              <button
+                onClick={() => handlePageChange(currentPage + 1)}
+                disabled={currentPage === totalPages}
+                className="px-3 py-2 text-gray-500 bg-white border border-gray-300 rounded-r-md hover:bg-gray-50 disabled:opacity-50">
+                Next
+              </button>
+            </nav>
           </div>
         </div>
       </div>

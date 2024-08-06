@@ -3,12 +3,16 @@ import App from "../App";
 import Product from "../pages/Product";
 import Cart from "../pages/Cart";
 import OrderSummary from "../pages/OrderSummary";
+import Error404 from "../pages/Error404";
+import AllProducts from "../pages/AllProducts";
+
 
 
 const routes = createBrowserRouter([
   {
     path: "/",
     element: <App />,
+    errorElement: <Error404></Error404>,
   },
   {
     path: "ProductView/:id",
@@ -21,6 +25,10 @@ const routes = createBrowserRouter([
   {
     path: "/CheckOut",
     element: <OrderSummary></OrderSummary>,
+  },
+  {
+    path: "/Products/AllProducts",
+    element: <AllProducts></AllProducts>,
   },
 ]);
 

@@ -18,8 +18,9 @@ export default function Navbar() {
     <Disclosure>
       {({ open }) => (
         <>
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <div className="flex h-16 justify-between">
+          <div
+            className=" w-7xl px-4 sm:px-6 lg:px-8 bg-[#f4f6f6]">
+            <div className="flex h-16 justify-between ">
               <div className="flex">
                 <div className="-ml-2 mr-2 flex items-center md:hidden">
                   {/* Mobile menu button */}
@@ -32,36 +33,41 @@ export default function Navbar() {
                     )}
                   </Disclosure.Button>
                 </div>
-                <div className="flex flex-shrink-0 items-center">
+                <div className="flex flex-shrink-0 items-center ml-16">
                   <img
                     className="block h-8 w-auto lg:hidden"
-                    src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
+                    src="https://i.ibb.co/NKVHwMx/image.png"
                     alt="Your Company"
                   />
                   <img
-                    className="hidden h-8 w-auto lg:block"
-                    src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
+                    className="hidden h-10 w-auto lg:block"
+                    src="https://i.ibb.co/NKVHwMx/image.png"
                     alt="Your Company"
                   />
                 </div>
-                <div className="px-72 hidden md:ml-6 md:flex md:space-x-8">
+                <div className="px-52 hidden md:ml-6 md:flex md:space-x-8">
                   <Link
                     to="/"
-                    className="inline-flex items-center border-b-2 border-indigo-500 px-1 pt-1 text-sm font-medium text-gray-900">
+                    className="inline-flex items-center border-b-2  px-1 pt-1 text-sm font-medium text-gray-900 ">
                     Home
                   </Link>
-                  <a
-                    href="#"
+                  <Link
+                    to="/Products/AllProducts"
                     className="inline-flex items-center border-b-2 border-transparent px-1 pt-1 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700">
-                    Sports
-                  </a>
-                  <a
-                    href="#"
+                    All Products
+                  </Link>
+                  <Link
+                    to={"/"}
                     className="inline-flex items-center border-b-2 border-transparent px-1 pt-1 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700">
                     Manage Product
+                  </Link>
+                  <a
+                    href="#ContactUs"
+                    className="inline-flex items-center border-b-2 border-transparent px-1 pt-1 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700">
+                    Contact Us
                   </a>
                   <a
-                    href="#"
+                    href="#AboutUs"
                     className="inline-flex items-center border-b-2 border-transparent px-1 pt-1 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700">
                     About Us
                   </a>
@@ -69,8 +75,10 @@ export default function Navbar() {
               </div>
               <div className="flex items-center">
                 <div className="flex-shrink-0">
-                  <div className="ml-4 flow-root lg:ml-8">
-                    <Link to="/Product/Cart" className="group -m-2 flex items-center p-2">
+                  <div className="ml-4 flow-root lg:mr-28">
+                    <Link
+                      to="/Product/Cart"
+                      className="group -m-2 flex items-center p-2">
                       <ShoppingBagIcon
                         className="h-6 w-6 flex-shrink-0 text-gray-400 group-hover:text-gray-500"
                         aria-hidden="true"
@@ -91,20 +99,26 @@ export default function Navbar() {
               <Disclosure.Button
                 as="a"
                 href="#"
-                className="block border-l-4 border-indigo-500 bg-indigo-50 py-2 pl-3 pr-4 text-base font-medium text-indigo-700 sm:pl-5 sm:pr-6">
+                className="block border-l-4  bg-indigo-50 py-2 pl-3 pr-4 text-base font-medium  sm:pl-5 sm:pr-6">
                 Home
               </Disclosure.Button>
               <Disclosure.Button
                 as="a"
-                href="#"
+                href=""
                 className="block border-l-4 border-transparent py-2 pl-3 pr-4 text-base font-medium text-gray-500 hover:border-gray-300 hover:bg-gray-50 hover:text-gray-700 sm:pl-5 sm:pr-6">
-                Sports
+                All Product
               </Disclosure.Button>
               <Disclosure.Button
                 as="a"
                 href="#"
                 className="block border-l-4 border-transparent py-2 pl-3 pr-4 text-base font-medium text-gray-500 hover:border-gray-300 hover:bg-gray-50 hover:text-gray-700 sm:pl-5 sm:pr-6">
                 Manage Product
+              </Disclosure.Button>
+              <Disclosure.Button
+                as="a"
+                href="#"
+                className="block border-l-4 border-transparent py-2 pl-3 pr-4 text-base font-medium text-gray-500 hover:border-gray-300 hover:bg-gray-50 hover:text-gray-700 sm:pl-5 sm:pr-6">
+                Contact Us
               </Disclosure.Button>
               <Disclosure.Button
                 as="a"

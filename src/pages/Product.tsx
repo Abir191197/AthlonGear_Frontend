@@ -124,23 +124,14 @@ export default function Product() {
               </div>
 
               <div className="mt-4  flex">
-                <img
-                  className="h-8 w-8 me-5"
-                  aria-hidden="true"
-                  src="../../public/tag.svg"
-                />
+                
 
                 <p className="text-base text-stone-950">
                   {data?.data?.description}
                 </p>
               </div>
               <div className="mt-4  flex  between">
-                <img
-                  className=" h-5 w-5 me-5"
-                  aria-hidden="true"
-                  src="../../public/cat.png"
-                  alt=""
-                />
+                
                 <p className="text-base text-gray-500">
                   Category: {data?.data?.category}
                 </p>
