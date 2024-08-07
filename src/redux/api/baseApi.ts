@@ -32,6 +32,14 @@ export const baseApi = createApi({
       }),
       invalidatesTags: ["createProduct"],
     }),
+    deleteProduct: builder.mutation({
+      query: (id) => ({
+        url: `/products/${id}`,
+        method: "PUT",
+        body: { isDeleted: true }, // Set isDeleted to true
+      }),
+      invalidatesTags: ["createProduct"], 
+    }),
   }),
 });
 
@@ -39,5 +47,6 @@ export const {
   useGetProductsQuery,
   useGetOneProductQuery,
   useSendOrderConfirmDataMutation,
-  useSendProductDetailsMutation
+  useSendProductDetailsMutation,
+  useDeleteProductMutation
 } = baseApi;
