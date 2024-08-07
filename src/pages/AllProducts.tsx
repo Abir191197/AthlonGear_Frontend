@@ -54,7 +54,7 @@ export default function AllProducts() {
 
   const handleAddItem = (item: CartItem) => {
     const existingItem = cartItems.find(
-      (cartItem) => cartItem._id === item._id
+      (cartItem: { _id: string; }) => cartItem._id === item._id
     );
 
     if (existingItem && existingItem.quantity >= existingItem.stock) {

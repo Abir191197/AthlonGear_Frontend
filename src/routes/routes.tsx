@@ -5,6 +5,7 @@ import Cart from "../pages/Cart";
 import OrderSummary from "../pages/OrderSummary";
 import Error404 from "../pages/Error404";
 import AllProducts from "../pages/AllProducts";
+import ManageProduct from "../pages/ManageProduct";
 
 
 
@@ -29,6 +30,10 @@ const routes = createBrowserRouter([
   {
     path: "/Products/AllProducts",
     element: <AllProducts></AllProducts>,
+  },
+  {
+    path: "/Products/MangeProduct",
+    element: <ManageProduct></ManageProduct>,
   },
 ]);
 

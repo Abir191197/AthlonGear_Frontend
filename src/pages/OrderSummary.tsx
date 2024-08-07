@@ -13,6 +13,7 @@ import {
 import { toast } from "react-toastify";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useSendOrderConfirmDataMutation } from "../redux/api/baseApi";
+import { ClipLoader } from "react-spinners";
 
 const deliveryMethods = [
   {
@@ -40,8 +41,9 @@ export default function OrderSummary() {
     deliveryMethods[0]
   );
 
-   const [sendOrderConfirmData] =
-     useSendOrderConfirmDataMutation();
+   const [sendOrderConfirmData, { isLoading}] =
+    useSendOrderConfirmDataMutation();
+  
   const dispatch = useAppDispatch();
 
   const handleIncreaseQuantity = (item: { _id: string }) => {
@@ -142,7 +144,23 @@ export default function OrderSummary() {
    
   };
     
-   
+   if (isLoading) {
+     return (
+       <div
+         style={{
+           display: "flex",
+           justifyContent: "center",
+           alignItems: "center",
+           height: "100vh",
+         }}>
+         <ClipLoader
+           size={20}
+           aria-label="Loading Spinner"
+           data-testid="loader"
+         />
+       </div>
+     );
+   }
     
   return (
     <>

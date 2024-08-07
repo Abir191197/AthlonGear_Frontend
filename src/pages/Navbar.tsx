@@ -18,8 +18,7 @@ export default function Navbar() {
     <Disclosure>
       {({ open }) => (
         <>
-          <div
-            className=" w-7xl px-4 sm:px-6 lg:px-8 bg-[#f4f6f6]">
+          <div className=" w-7xl px-4 sm:px-6 lg:px-8 bg-[#f4f6f6]">
             <div className="flex h-16 justify-between ">
               <div className="flex">
                 <div className="-ml-2 mr-2 flex items-center md:hidden">
@@ -34,16 +33,20 @@ export default function Navbar() {
                   </Disclosure.Button>
                 </div>
                 <div className="flex flex-shrink-0 items-center ml-16">
-                  <img
-                    className="block h-8 w-auto lg:hidden"
-                    src="https://i.ibb.co/NKVHwMx/image.png"
-                    alt="Your Company"
-                  />
-                  <img
-                    className="hidden h-10 w-auto lg:block"
-                    src="https://i.ibb.co/NKVHwMx/image.png"
-                    alt="Your Company"
-                  />
+                  <Link to="/">
+                    <img
+                      className="block h-8 w-auto lg:hidden"
+                      src="https://i.ibb.co/NKVHwMx/image.png"
+                      alt="Your Company"
+                    />
+                  </Link>
+                  <Link to="/">
+                    <img
+                      className="hidden h-10 w-auto lg:block"
+                      src="https://i.ibb.co/NKVHwMx/image.png"
+                      alt="Your Company"
+                    />
+                  </Link>
                 </div>
                 <div className="px-52 hidden md:ml-6 md:flex md:space-x-8">
                   <Link
@@ -57,7 +60,7 @@ export default function Navbar() {
                     All Products
                   </Link>
                   <Link
-                    to={"/"}
+                    to="/Products/MangeProduct"
                     className="inline-flex items-center border-b-2 border-transparent px-1 pt-1 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700">
                     Manage Product
                   </Link>
