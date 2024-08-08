@@ -6,13 +6,12 @@ export default {
   ],
   theme: {
     extend: {
-      // You can add custom colors, fonts, spacing, etc., here
       colors: {
         primary: '#1da1f2',
         secondary: '#14171a',
       },
       fontFamily: {
-        sans: ['Graphik', 'sans-serif'],
+        sans: ['Helvetica', 'Arial', 'sans-serif'],
         serif: ['Merriweather', 'serif'],
       },
       spacing: {
@@ -24,6 +23,5 @@ export default {
   plugins: [
     // eslint-disable-next-line no-undef
     require('@tailwindcss/forms'),
-    // Add other plugins here if needed
   ],
 }

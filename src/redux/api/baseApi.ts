@@ -71,6 +71,15 @@ export const baseApi = createApi({
         };
       },
     }),
+
+    updateProduct: builder.mutation({
+      query: ({ id, updates }) => ({
+        url: `/products/${id}`,
+        method: "PUT",
+        body: updates, // Pass the updates object
+      }),
+      invalidatesTags: ["createProduct"],
+    }),
   }),
 });
 
@@ -81,5 +90,6 @@ export const {
   useSendProductDetailsMutation,
   useDeleteProductMutation,
   useGetAllProductsWithSearchQuery,
+  useUpdateProductMutation
   
 } = baseApi;

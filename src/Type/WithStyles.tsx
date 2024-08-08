@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 interface WithStylesProps {
   description: string;
@@ -30,9 +31,11 @@ const WithStyles: React.FC<WithStylesProps> = ({
             {description2}
           </em>
         </div>
-        <button className="mt-20 px-6 py-2 bg-green-300 text-black font-bold uppercase tracking-wide rounded">
+        <Link
+          to="Products/AllProducts"
+          className="mt-20 px-6 py-2 bg-green-300 text-black font-bold uppercase tracking-wide rounded">
           Shop Now
-        </button>
+        </Link>
       </div>
     </div>
   );

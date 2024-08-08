@@ -1,16 +1,17 @@
-import { Link, ScrollRestoration } from "react-router-dom";
+import { ScrollRestoration } from "react-router-dom";
 import Navbar from "./Navbar";
 import {
   useDeleteProductMutation,
   useGetProductsQuery,
   useSendProductDetailsMutation,
+  useUpdateProductMutation,
 } from "../redux/api/baseApi";
 import { PencilSquareIcon } from "@heroicons/react/20/solid";
 import { TrashIcon } from "@heroicons/react/24/outline";
 import { SyncLoader } from "react-spinners";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { toast } from "react-toastify";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ConfirmationModal from "../components/ConfirmationModal";
 
 interface Product {
@@ -26,24 +27,95 @@ interface Product {
   quantity: number;
 }
 
-export default function ManageProduct() {
- const [isModalOpen, setIsModalOpen] = useState(false);
- const [productIdToDelete, setProductIdToDelete] = useState<string | null>(
-   null
- );
+// Define the categories
+const categories = [
+  "Fitness Equipment",
+  "Sports Apparel",
+  "Footwear",
+  "Outdoor Gear",
+  "Cycling",
+  "Running",
+  "Swimming",
+  "Team Sports",
+  "Racket Sports",
+  "Combat Sports",
+  "Yoga & Pilates",
+  "Winter Sports",
+  "Golf",
+  "Tennis",
+  "Basketball",
+  "Football",
+  "Baseball",
+  "Hockey",
+  "Skateboarding",
+  "Surfing",
+  "Climbing",
+  "Water Sports",
+  "Track & Field",
+];
 
-  const { register, handleSubmit, reset } = useForm<Product>();
+export default function ManageProduct() {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [productIdToDelete, setProductIdToDelete] = useState<string | null>(
+    null
+  );
+  const [editProduct, setEditProduct] = useState<Product | null>(null);
+
+  const { register, handleSubmit, reset, setValue } = useForm<Product>();
   const { data, isLoading: isFetchingProducts } =
     useGetProductsQuery(undefined);
   const [sendProductData, { isLoading: isSendingProduct }] =
     useSendProductDetailsMutation();
   const [deleteProduct, { isLoading: DeleteLoading }] =
-    useDeleteProductMutation(undefined);
+    useDeleteProductMutation();
+  const [updateProduct, { isLoading: isUpdatingProduct }] =
+    useUpdateProductMutation();
+  
+useEffect(() => {
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}, []);
+  useEffect(() => {
+    if (editProduct) {
+      setValue("title", editProduct.title);
+      setValue("description", editProduct.description);
+      setValue("category", editProduct.category);
+      setValue("brand", editProduct.brand);
+      setValue("price", editProduct.price);
+      setValue("imageLink", editProduct.imageLink);
+      setValue("stock", editProduct.stock);
+    } else {
+      reset();
+    }
+  }, [editProduct, setValue, reset]);
 
- const handleDelete = async () => {
-   if (productIdToDelete) {
-     try {
-       await deleteProduct(productIdToDelete).unwrap();
+  const handleUpdate = async (
+    productId: string,
+    updatedFields: Partial<Product>
+  ) => {
+    try {
+     
+
+      await updateProduct({ id: productId, updates: updatedFields }).unwrap();
+      toast.success("Product updated successfully!", {
+      position: "top-center",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      theme: "light",
+    });
+      setEditProduct(null);
+      reset();
+    } catch (error) {
+      toast.error(`Failed to update product: ${error}`);
+    }
+  };
+
+  const handleDelete = async () => {
+    if (productIdToDelete) {
+      try {
+        await deleteProduct(productIdToDelete).unwrap();
          toast.success("Product deleted successfully!", {
            position: "top-center",
            autoClose: 3000,
@@ -53,42 +125,67 @@ export default function ManageProduct() {
            draggable: true,
            theme: "light",
          });
-      
-       closeModal();
-     } catch (error) {
-       toast.error("Failed to delete product", {
-         position: "top-center",
-         autoClose: 3000,
-         hideProgressBar: false,
-         closeOnClick: true,
-         pauseOnHover: true,
-         draggable: true,
-         theme: "light",
-       });
-     }
-   }
- };
+        closeModal();
+      } catch (error) {
+        toast.error("Failed to delete product");
+      }
+    }
+  };
 
- const openModal = (id: string) => {
-   setProductIdToDelete(id);
-   setIsModalOpen(true);
- };
+  const onSubmit: SubmitHandler<Product> = async (productForm) => {
+    const updatedProductForm = {
+      ...productForm,
+      price: Number(productForm.price),
+      stock: Number(productForm.stock),
+    };
 
- const closeModal = () => {
-   setProductIdToDelete(null);
-   setIsModalOpen(false);
- };
+    try {
+      if (editProduct) {
+        await handleUpdate(editProduct._id, updatedProductForm);
+      } else {
+        await sendProductData(updatedProductForm).unwrap();
+         toast.success("Product created successfully!", {
+           position: "top-center",
+           autoClose: 3000,
+           hideProgressBar: false,
+           closeOnClick: true,
+           pauseOnHover: true,
+           draggable: true,
+           theme: "light",
+         });
+      }
+    } catch (error) {
+      toast.error(
+        `Failed to ${editProduct ? "update" : "create"} product: ${error}`
+      );
+    }
+    reset();
+    setEditProduct(null); // Reset edit mode to ensure "Add Product" is shown after form submission
+  };
 
+  const openModal = (id: string) => {
+    setProductIdToDelete(id);
+    setIsModalOpen(true);
+  };
 
-  if (isFetchingProducts || isSendingProduct || DeleteLoading) {
+  const closeModal = () => {
+    setProductIdToDelete(null);
+    setIsModalOpen(false);
+  };
+
+  const handleCancel = () => {
+    setEditProduct(null); // Reset edit mode when cancel is clicked
+    reset(); // Reset the form fields
+  };
+
+  if (
+    isFetchingProducts ||
+    isSendingProduct ||
+    DeleteLoading ||
+    isUpdatingProduct
+  ) {
     return (
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          height: "100vh",
-        }}>
+      <div className="flex justify-center items-center h-screen">
         <SyncLoader
           size={20}
           aria-label="Loading Spinner"
@@ -98,45 +195,10 @@ export default function ManageProduct() {
     );
   }
 
-  const onSubmit: SubmitHandler<Product> = async (productForm) => {
-    const updatedProductForm = {
-      ...productForm,
-      price: Number(productForm.price),
-      stock: Number(productForm.stock),
-    };
-
-    
-    try {
-      await sendProductData(updatedProductForm).unwrap();
-      toast.success("Product created successfully!", {
-        position: "top-center",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        theme: "light",
-      });
-    } catch (error) {
-      console.error(error);
-      toast.error(`Failed to create product: ${error}`, {
-        position: "top-center",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        theme: "light",
-      });
-    }
-    reset();
-  };
-
   return (
     <>
       <Navbar />
       <ScrollRestoration />
-
       <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
         <div className="w-full bg-white shadow-sm rounded-sm m-2 p-4">
           <form className="p-2" onSubmit={handleSubmit(onSubmit)}>
@@ -166,7 +228,8 @@ export default function ManageProduct() {
                   id="description"
                   {...register("description", { required: true })}
                   placeholder="Enter product description"
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"></textarea>
+                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                />
               </div>
 
               <div className="sm:col-span-3 lg:col-span-1">
@@ -180,29 +243,11 @@ export default function ManageProduct() {
                   {...register("category", { required: true })}
                   className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
                   <option value="">Select a Category</option>
-                  <option value="Fitness Equipment">Fitness Equipment</option>
-                  <option value="Sports Apparel">Sports Apparel</option>
-                  <option value="Footwear">Footwear</option>
-                  <option value="Outdoor Gear">Outdoor Gear</option>
-                  <option value="Cycling">Cycling</option>
-                  <option value="Running">Running</option>
-                  <option value="Swimming">Swimming</option>
-                  <option value="Team Sports">Team Sports</option>
-                  <option value="Racket Sports">Racket Sports</option>
-                  <option value="Combat Sports">Combat Sports</option>
-                  <option value="Yoga & Pilates">Yoga & Pilates</option>
-                  <option value="Winter Sports">Winter Sports</option>
-                  <option value="Golf">Golf</option>
-                  <option value="Tennis">Tennis</option>
-                  <option value="Basketball">Basketball</option>
-                  <option value="Football">Football</option>
-                  <option value="Baseball">Baseball</option>
-                  <option value="Hockey">Hockey</option>
-                  <option value="Skateboarding">Skateboarding</option>
-                  <option value="Surfing">Surfing</option>
-                  <option value="Climbing">Climbing</option>
-                  <option value="Water Sports">Water Sports</option>
-                  <option value="Track & Field">Track & Field</option>
+                  {categories.map((category) => (
+                    <option key={category} value={category}>
+                      {category}
+                    </option>
+                  ))}
                 </select>
               </div>
 
@@ -238,7 +283,7 @@ export default function ManageProduct() {
 
               <div className="sm:col-span-3 lg:col-span-2">
                 <label
-                  htmlFor="image"
+                  htmlFor="imageLink"
                   className="block text-sm font-medium text-gray-900">
                   Image Link
                 </label>
@@ -267,33 +312,35 @@ export default function ManageProduct() {
               </div>
             </div>
 
-            <div className="flex justify-end gap-2 mt-4">
-              <button
-                type="button"
-                className="text-sm font-semibold text-gray-900 hover:text-gray-700"
-                onClick={() => reset()}>
-                Cancel
-              </button>
+            <div className="mt-4 flex space-x-4">
               <button
                 type="submit"
-                className="bg-indigo-600 px-3 py-2 text-sm font-semibold text-white rounded-md shadow-sm hover:bg-indigo-500 focus:ring-2 focus:ring-indigo-600">
-                Upload
+                className="bg-indigo-600 px-3 py-1.5 text-white text-sm font-semibold rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                disabled={isSendingProduct || isUpdatingProduct}>
+                {editProduct ? "Update Product" : "Add Product"}
               </button>
+
+              {editProduct && (
+                <button
+                  type="button"
+                  onClick={handleCancel}
+                  className="bg-gray-300 px-3 py-1.5 text-black text-sm font-semibold rounded-md shadow-sm hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500">
+                  Cancel
+                </button>
+              )}
             </div>
           </form>
         </div>
 
-        <div className="w-full bg-white shadow-md rounded-xl m-2 p-4">
-          <div className="flex flex-col items-center">
-            <div className="text-center">
-              <h1 className="text-2xl font-semibold leading-6 text-gray-900">
-                All Products
-              </h1>
-              <p className="mt-2 text-sm text-gray-700">
-                A list of all the products including image, title, brand,
-                category, and more.
-              </p>
-            </div>
+        <div className="w-full bg-white shadow-sm rounded-xl m-2 p-4">
+          <div className="text-center">
+            <h1 className="text-2xl font-semibold leading-6 text-gray-900">
+              All Products
+            </h1>
+            <p className="mt-2 text-sm text-gray-700">
+              A list of all the products including image, title, brand,
+              category, and more.
+            </p>
           </div>
 
           <div className="mt-8 flow-root">
@@ -304,104 +351,98 @@ export default function ManageProduct() {
                     <tr>
                       <th
                         scope="col"
-                        className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+                        className="py-3 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-4">
                         Sl
                       </th>
                       <th
                         scope="col"
-                        className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+                        className="py-3 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-4">
                         Image
                       </th>
                       <th
                         scope="col"
-                        className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+                        className="px-3 py-3 text-center text-sm font-semibold text-gray-900">
                         Title
                       </th>
                       <th
                         scope="col"
-                        className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
-                        Category
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+                        className="px-3 py-3 text-left text-sm font-semibold text-gray-900">
                         Brand
                       </th>
                       <th
                         scope="col"
-                        className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+                        className="px-3 py-3 text-left text-sm font-semibold text-gray-900">
+                        Category
+                      </th>
+                      <th
+                        scope="col"
+                        className="px-3 py-3 text-left text-sm font-semibold text-gray-900">
                         Price
                       </th>
                       <th
                         scope="col"
-                        className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+                        className="px-3 py-3 text-left text-sm font-semibold text-gray-900">
                         Stock
                       </th>
                       <th
                         scope="col"
-                        className="py-3.5 text-right text-sm font-semibold text-gray-900">
-                        Action
+                        className="relative py-3 pl-3 pr-4 sm:pr-4">
+                        <span className="sr-only">Edit</span>
+                      </th>
+                      <th
+                        scope="col"
+                        className="relative py-3 pl-3 pr-4 sm:pr-4">
+                        <span className="sr-only">Delete</span>
                       </th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-200 bg-white">
                     {data?.data?.map((item: Product, index: number) => (
                       <tr key={item._id}>
-                        <td className="whitespace-nowrap text-sm text-gray-500">
+                        <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-900">
                           {index + 1}
                         </td>
-                        <td className="whitespace-nowrap py-2 text-sm sm:pl-0">
-                          <div className="flex items-center">
-                            <div className="h-20 w-20 flex-shrink-0">
-                              <img
-                                className="h-20 w-20 rounded-full"
-                                src={item.imageLink}
-                                alt=""
-                              />
-                            </div>
-                          </div>
+                        <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-4">
+                          <img
+                            src={item.imageLink}
+                            alt={item.title}
+                            className="h-16 w-16 object-cover rounded-full"
+                          />
                         </td>
-                        <td className="whitespace-nowrap text-sm text-gray-500">
-                          <div className="text-gray-900">{item.title}</div>
+                        <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-900 text-center">
+                          {item.title}
                         </td>
-                        <td className="whitespace-nowrap text-sm text-gray-500">
-                          <div className="text-gray-900">{item.category}</div>
+                        <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-900">
+                          {item.brand}
                         </td>
-                        <td className="whitespace-nowrap text-sm text-gray-500">
-                          <div className="text-gray-900">{item.brand}</div>
+                        <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-900">
+                          {item.category}
                         </td>
-                        <td className="whitespace-nowrap px-3 py-5 text-sm text-gray-500">
-                          <span className="inline-flex items-center rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20">
-                            {item.price}$
-                          </span>
+                        <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-900">
+                          ${item.price.toFixed(2)}
                         </td>
-                        <td className="whitespace-nowrap px-3 py-5 text-sm text-gray-500">
+                        <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-900">
                           {item.stock}
                         </td>
-                        <td className="relative whitespace-nowrap py-5 pl-3 pr-6 text-right text-sm font-medium sm:pr-10">
+                        <td className="relative whitespace-nowrap text-right text-sm font-medium sm:pl-4">
                           <button
-                            onClick={() => openModal(item._id)}
-                            disabled={DeleteLoading}
-                            className="text-red-600 hover:text-red-800">
-                            <span>
-                              <TrashIcon
-                                className="h-5 w-5"
-                                aria-hidden="true"
-                              />
-                            </span>
+                            onClick={() => {
+                              window.scrollTo({ top: 0, behavior: "smooth" });
+                              setEditProduct(item);
+                            }}
+                            className="text-blue-600 hover:text-blue-800">
+                            <PencilSquareIcon
+                              className="h-5 w-5"
+                              aria-hidden="true"
+                            />
                           </button>
                         </td>
-                        <td className="relative whitespace-nowrap py-5 pl-6 pr-4 text-right text-sm font-medium sm:pl-4">
-                          <Link
-                            to="/"
-                            className="text-blue-600 hover:text-blue-800">
-                            <span className="">
-                              <PencilSquareIcon
-                                className="h-5 w-5"
-                                aria-hidden="true"
-                              />
-                            </span>
-                          </Link>
+                        <td className="relative whitespace-nowrap text-right text-sm font-medium sm:pl-4">
+                          <button
+                            onClick={() => openModal(item._id)}
+                            className="text-red-600 hover:text-red-800">
+                            <TrashIcon className="h-5 w-5" aria-hidden="true" />
+                          </button>
                         </td>
                       </tr>
                     ))}

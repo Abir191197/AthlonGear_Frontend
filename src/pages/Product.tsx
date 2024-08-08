@@ -13,15 +13,14 @@ import { addItem, CartItem } from "../redux/features/cartSlice";
 import { toast } from "react-toastify";
 import { SyncLoader } from "react-spinners";
 
-
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
 }
 
 export default function Product() {
   const { id } = useParams();
-  const { data,isLoading } = useGetOneProductQuery(id);
-  
+  const { data, isLoading } = useGetOneProductQuery(id);
+
   const dispatch = useAppDispatch();
   const cartItems = useAppSelector((state) => state.cart.carts);
 
@@ -51,6 +50,7 @@ export default function Product() {
       });
     }
   };
+
   if (isLoading) {
     return (
       <div
@@ -61,7 +61,6 @@ export default function Product() {
           height: "100vh",
         }}>
         <SyncLoader
-          
           size={20}
           aria-label="Loading Spinner"
           data-testid="loader"
@@ -73,13 +72,13 @@ export default function Product() {
   return (
     <>
       <ScrollRestoration />
-      <Navbar></Navbar>
+      <Navbar />
       <div className="bg-teal-50">
-        <div className="mx-auto max-w-2xl px-4 py-16 sm:px-6 sm:py-24 lg:grid lg:max-w-7xl lg:grid-cols-2 lg:gap-x-8 lg:px-8">
+        <div className="mx-auto max-w-xl px-4 py-12 sm:px-6 sm:py-20 lg:grid lg:max-w-5xl lg:grid-cols-2 lg:gap-x-6 lg:px-6">
           {/* Product details */}
-          <div className="lg:max-w-lg lg:self-end">
+          <div className="lg:max-w-md lg:self-end">
             <div className="mt-4">
-              <h1 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+              <h1 className="text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl">
                 {data?.data?.title}
               </h1>
             </div>
@@ -90,7 +89,7 @@ export default function Product() {
               </h2>
 
               <div className="flex items-center">
-                <p className="text-xl font-semibold text-green-900 sm:text-3xl">
+                <p className="text-xl font-semibold text-green-900 sm:text-2xl">
                   {data?.data?.price}$
                 </p>
 
@@ -106,7 +105,7 @@ export default function Product() {
                               data?.data?.rating > rating
                                 ? "text-yellow-400"
                                 : "text-gray-300",
-                              "h-5 w-5 flex-shrink-0"
+                              "h-4 w-4 flex-shrink-0"
                             )}
                             aria-hidden="true"
                           />
@@ -116,33 +115,27 @@ export default function Product() {
                         {data?.data?.rating} out of 5 stars
                       </p>
                     </div>
-                    {/* <p className="ml-2 text-sm text-gray-500">
-                      {data?.data?.totalCount} reviews
-                    </p> */}
                   </div>
                 </div>
               </div>
 
-              <div className="mt-4  flex">
-                
-
+              <div className="mt-4 flex">
                 <p className="text-base text-stone-950">
                   {data?.data?.description}
                 </p>
               </div>
-              <div className="mt-4  flex  between">
-                
+              <div className="mt-4 flex">
                 <p className="text-base text-gray-500">
                   Category: {data?.data?.category}
                 </p>
-                <p className="text-base text-gray-500 ms-32">
+                <p className="text-base text-gray-500 ms-16">
                   Brand: {data?.data?.brand}
                 </p>
               </div>
 
               <div className="mt-6 flex items-center">
                 <CheckIcon
-                  className="h-5 w-5 flex-shrink-0 text-green-500"
+                  className="h-4 w-4 flex-shrink-0 text-green-500"
                   aria-hidden="true"
                 />
                 <p className="ml-2 text-sm text-gray-500">
@@ -153,7 +146,7 @@ export default function Product() {
           </div>
 
           {/* Product image */}
-          <div className="mt-10 lg:col-start-2 lg:row-span-2 lg:mt-0 lg:self-center">
+          <div className="mt-8 lg:col-start-2 lg:row-span-2 lg:mt-0 lg:self-center">
             <div className="aspect-h-1 aspect-w-1 overflow-hidden rounded-lg">
               <img
                 src={data?.data?.imageLink}
@@ -164,7 +157,7 @@ export default function Product() {
           </div>
 
           {/* Product form */}
-          <div className="mt-10 lg:col-start-1 lg:row-start-2 lg:max-w-lg lg:self-start">
+          <div className="mt-8 lg:col-start-1 lg:row-start-2 lg:max-w-md lg:self-start">
             <section aria-labelledby="options-heading">
               <h2 id="options-heading" className="sr-only">
                 Product options
@@ -183,20 +176,20 @@ export default function Product() {
                     />
                   </a>
                 </div>
-                <div className="mt-10">
+                <div className="mt-8">
                   <button
                     type="button"
                     onClick={() => handleAddItem(data?.data)}
-                    className="flex w-full items-center justify-center rounded-md border border-transparent bg-indigo-600 px-8 py-3 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-50">
+                    className="flex w-full items-center justify-center rounded-md border border-transparent bg-indigo-600 px-6 py-2 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-50">
                     Add to bag
                   </button>
                 </div>
-                <div className="mt-6 text-center">
+                <div className="mt-4 text-center">
                   <a
                     href="#"
                     className="group inline-flex text-base font-medium">
                     <ShieldCheckIcon
-                      className="mr-2 h-6 w-6 flex-shrink-0 text-gray-400 group-hover:text-gray-500"
+                      className="mr-2 h-5 w-5 flex-shrink-0 text-gray-400 group-hover:text-gray-500"
                       aria-hidden="true"
                     />
                     <span className="text-gray-500 hover:text-gray-700">

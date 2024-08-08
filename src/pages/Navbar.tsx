@@ -59,11 +59,7 @@ export default function Navbar() {
                     className="inline-flex items-center border-b-2 border-transparent px-1 pt-1 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700">
                     All Products
                   </Link>
-                  <Link
-                    to="/Products/MangeProduct"
-                    className="inline-flex items-center border-b-2 border-transparent px-1 pt-1 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700">
-                    Manage Product
-                  </Link>
+
                   <a
                     href="#ContactUs"
                     className="inline-flex items-center border-b-2 border-transparent px-1 pt-1 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700">
@@ -74,6 +70,11 @@ export default function Navbar() {
                     className="inline-flex items-center border-b-2 border-transparent px-1 pt-1 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700">
                     About Us
                   </a>
+                  <Link
+                    to="/Products/MangeProduct"
+                    className="inline-flex items-center border-b-2 border-transparent px-1 pt-1 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700">
+                    Manage Product
+                  </Link>
                 </div>
               </div>
               <div className="flex items-center">
