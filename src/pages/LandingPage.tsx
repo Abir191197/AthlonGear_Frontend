@@ -1,5 +1,5 @@
-
 import AboutUs from "./AboutUs";
+import Category from "./Category";
 import ContactUs from "./ContactUs";
 import Footer from "./Footer";
 
@@ -16,17 +16,18 @@ const LandingPage = () => {
       <div id="HeroSection">
         <HeroSection></HeroSection>
       </div>
-
+      <Category></Category>
       <Products></Products>
 
       <div id="AboutUs">
         <AboutUs></AboutUs>
       </div>
-      <div id="ContactUs"><ContactUs></ContactUs></div>
+      <div id="ContactUs">
+        <ContactUs></ContactUs>
+      </div>
       <Footer></Footer>
     </>
   );
 };
 
 export default LandingPage;
-

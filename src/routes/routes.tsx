@@ -6,6 +6,7 @@ import OrderSummary from "../pages/OrderSummary";
 import Error404 from "../pages/Error404";
 import AllProducts from "../pages/AllProducts";
 import ManageProduct from "../pages/ManageProduct";
+import AllCategory from "../pages/AllCategory";
 
 
 
@@ -31,6 +32,15 @@ const routes = createBrowserRouter([
     path: "/Products/AllProducts",
     element: <AllProducts></AllProducts>,
   },
+  {
+    path: "/categories",
+    element: <AllCategory></AllCategory>,
+  },
+  {
+    path: "/Products/AllProducts/:categoryName",
+    element: <AllProducts></AllProducts>,
+  },
+
   {
     path: "/Products/MangeProduct",
     element: <ManageProduct></ManageProduct>,

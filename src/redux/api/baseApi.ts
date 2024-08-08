@@ -38,8 +38,15 @@ export const baseApi = createApi({
         method: "PUT",
         body: { isDeleted: true }, // Set isDeleted to true
       }),
-      invalidatesTags: ["createProduct"], 
+      invalidatesTags: ["createProduct"],
     }),
+    getAllProductsWithSearch: builder.query({
+      query: ({ searchKeyWord }) => ({
+        url: `/products?searchTerm=${searchKeyWord}`,
+        method: "GET",
+      }),
+    }),
+    
   }),
 });
 
@@ -48,5 +55,7 @@ export const {
   useGetOneProductQuery,
   useSendOrderConfirmDataMutation,
   useSendProductDetailsMutation,
-  useDeleteProductMutation
+  useDeleteProductMutation,
+  useGetAllProductsWithSearchQuery,
+  
 } = baseApi;

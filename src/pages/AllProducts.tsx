@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { StarIcon } from "@heroicons/react/20/solid";
 import { EyeIcon, ShoppingCartIcon } from "@heroicons/react/24/outline";
-import { useGetProductsQuery } from "../redux/api/baseApi";
+import { useGetAllProductsWithSearchQuery } from "../redux/api/baseApi";
 import "./Products.css";
-import { Link, ScrollRestoration } from "react-router-dom";
+import { Link, ScrollRestoration, useLocation } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import { addItem, CartItem } from "../redux/features/cartSlice";
 import { toast } from "react-toastify";
@@ -28,7 +28,17 @@ function classNames(...classes: string[]) {
 }
 
 export default function AllProducts() {
-  const { data, isLoading } = useGetProductsQuery(undefined);
+  
+ const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+ const category = queryParams.get("category");
+
+
+
+  // Fetch data using the hook
+  const { data, isLoading } = useGetAllProductsWithSearchQuery(
+    { searchKeyWord: category || "" } // Pass empty string if no keyword
+  );
   const dispatch = useAppDispatch();
   const cartItems = useAppSelector((state) => state.cart.carts);
 
