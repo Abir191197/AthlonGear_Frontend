@@ -1,6 +1,6 @@
-import { useState } from "react";
+import React, {  useState } from "react";
 import { StarIcon } from "@heroicons/react/20/solid";
-import { EyeIcon, ShoppingCartIcon } from "@heroicons/react/24/outline";
+import { ChevronDownIcon, EyeIcon, ShoppingCartIcon } from "@heroicons/react/24/outline";
 import { useGetAllProductsWithSearchQuery } from "../redux/api/baseApi";
 import "./Products.css";
 import { Link, ScrollRestoration, useLocation } from "react-router-dom";
@@ -9,6 +9,15 @@ import { addItem, CartItem } from "../redux/features/cartSlice";
 import { toast } from "react-toastify";
 import { SyncLoader } from "react-spinners";
 import Navbar from "./Navbar";
+import { Menu, Transition } from "@headlessui/react";
+
+
+  const sortOptions = [
+    { name: "Price: Low to High", value: "price" },
+    { name: "Price: High to Low", value: "-price" },
+    { name: "Newest First", value: "-createdAt" },
+    { name: "Oldest First", value: "createdAt" },
+  ];
 
 export interface Product {
   _id: string;
@@ -28,19 +37,23 @@ function classNames(...classes: string[]) {
 }
 
 export default function AllProducts() {
-  
-
-const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState(""); //search
+  const [sortOption, setSortOption] = useState(""); //sort
+  // Handle sort option selection
+  const handleSortSelection = (value: React.SetStateAction<string>) => {
+    setSortOption(value); // Update the state with the selected sort option
+  };
 
   // Fetch data using the hook
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
- 
+
   const category = queryParams.get("category") || "";
 
   const { data, isLoading } = useGetAllProductsWithSearchQuery({
-    searchKeyWord: searchQuery,
+    searchTerm: searchQuery,
     category: category,
+    sort: sortOption, // Pass the selected sort option here
   });
   const dispatch = useAppDispatch();
   const cartItems = useAppSelector((state) => state.cart.carts);
@@ -67,7 +80,7 @@ const [searchQuery, setSearchQuery] = useState("");
 
   const handleAddItem = (item: CartItem) => {
     const existingItem = cartItems.find(
-      (cartItem: { _id: string; }) => cartItem._id === item._id
+      (cartItem: { _id: string }) => cartItem._id === item._id
     );
 
     if (existingItem && existingItem.quantity >= existingItem.stock) {
@@ -114,19 +127,67 @@ const [searchQuery, setSearchQuery] = useState("");
         <h2 className="font-semibold text-4xl">Features</h2>
         <h2 className="font-semibold text-4xl ml-2">Items</h2>
       </div>
-      {/* Search Field */}
 
       <div className="bg-white">
         <div className="mx-auto overflow-hidden sm:px-6 lg:px-8">
           <h2 className="sr-only">Products</h2>
-          <div className="mt-4 sm:mt-2 mb-7 ">
+          <div className="mt-4 sm:mt-2 mb-7 flex justify-between items-center">
+            {/* Search Field */}
             <input
               type="text"
-               value={searchQuery}
-               onChange={(e) => setSearchQuery(e.target.value)}
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search products..."
               className="p-2 border border-gray-300 rounded-md"
             />
+
+            {/* Sort Dropdown */}
+            {/* Sort Dropdown */}
+            <div>
+              <Menu as="div" className="relative inline-block text-left">
+                <div>
+                  <Menu.Button className="group inline-flex justify-center text-xl font-semibold text-gray-900 hover:text-gray-900">
+                    Sort
+                    <ChevronDownIcon
+                      className="-mr-1 ml-1 h-5 w-5 flex-shrink-0 text-gray-400 group-hover:text-gray-500"
+                      aria-hidden="true"
+                    />
+                  </Menu.Button>
+                </div>
+
+                <Transition
+                  as={React.Fragment}
+                  enter="transition ease-out duration-100"
+                  enterFrom="transform opacity-0 scale-95"
+                  enterTo="transform opacity-100 scale-100"
+                  leave="transition ease-in duration-75"
+                  leaveFrom="transform opacity-100 scale-100"
+                  leaveTo="transform opacity-0 scale-95">
+                  <Menu.Items className="absolute right-0 z-10 mt-2 w-40 origin-top-right rounded-md bg-white shadow-2xl ring-1 ring-black ring-opacity-5 focus:outline-none">
+                    <div className="py-1">
+                      {sortOptions.map((option) => (
+                        <Menu.Item key={option.value}>
+                          {({ active }) => (
+                            <a
+                              href="#"
+                              onClick={() => handleSortSelection(option.value)}
+                              className={classNames(
+                                option.value === sortOption
+                                  ? "font-medium text-gray-900"
+                                  : "text-gray-500",
+                                active ? "bg-gray-100" : "",
+                                "block px-4 py-2 text-sm"
+                              )}>
+                              {option.name}
+                            </a>
+                          )}
+                        </Menu.Item>
+                      ))}
+                    </div>
+                  </Menu.Items>
+                </Transition>
+              </Menu>
+            </div>
           </div>
 
           <div className="grid gap-4 grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 bg-white">

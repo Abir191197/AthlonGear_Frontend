@@ -41,14 +41,35 @@ export const baseApi = createApi({
       invalidatesTags: ["createProduct"],
     }),
     getAllProductsWithSearch: builder.query({
-      query: ({ searchKeyWord, category }) => ({
-        url: `/products`,
-        method: "GET",
-        params: {
-          searchTerm: searchKeyWord || "",
-          category: category || "",
-        },
-      }),
+      query: ({
+        searchTerm,
+        category,
+        sort,
+      }: {
+        searchTerm?: string;
+        category?: string;
+        sort?: string; // Add sort as an optional parameter
+      }) => {
+        const params: Record<string, string> = {};
+
+        if (searchTerm && searchTerm.trim()) {
+          params.searchTerm = searchTerm.trim();
+        }
+
+        if (category && category.trim()) {
+          params.category = category.trim();
+        }
+
+        if (sort && sort.trim()) {
+          params.sort = sort.trim(); // Add sort parameter if provided
+        }
+
+        return {
+          url: `/products`,
+          method: "GET",
+          params,
+        };
+      },
     }),
   }),
 });
