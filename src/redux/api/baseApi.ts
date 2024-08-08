@@ -41,12 +41,15 @@ export const baseApi = createApi({
       invalidatesTags: ["createProduct"],
     }),
     getAllProductsWithSearch: builder.query({
-      query: ({ searchKeyWord }) => ({
-        url: `/products?searchTerm=${searchKeyWord}`,
+      query: ({ searchKeyWord, category }) => ({
+        url: `/products`,
         method: "GET",
+        params: {
+          searchTerm: searchKeyWord || "",
+          category: category || "",
+        },
       }),
     }),
-    
   }),
 });
 

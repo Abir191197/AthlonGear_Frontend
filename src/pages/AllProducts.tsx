@@ -29,16 +29,19 @@ function classNames(...classes: string[]) {
 
 export default function AllProducts() {
   
- const location = useLocation();
-  const queryParams = new URLSearchParams(location.search);
- const category = queryParams.get("category");
 
-
+const [searchQuery, setSearchQuery] = useState("");
 
   // Fetch data using the hook
-  const { data, isLoading } = useGetAllProductsWithSearchQuery(
-    { searchKeyWord: category || "" } // Pass empty string if no keyword
-  );
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+ 
+  const category = queryParams.get("category") || "";
+
+  const { data, isLoading } = useGetAllProductsWithSearchQuery({
+    searchKeyWord: searchQuery,
+    category: category,
+  });
   const dispatch = useAppDispatch();
   const cartItems = useAppSelector((state) => state.cart.carts);
 
@@ -111,10 +114,20 @@ export default function AllProducts() {
         <h2 className="font-semibold text-4xl">Features</h2>
         <h2 className="font-semibold text-4xl ml-2">Items</h2>
       </div>
+      {/* Search Field */}
 
       <div className="bg-white">
         <div className="mx-auto overflow-hidden sm:px-6 lg:px-8">
           <h2 className="sr-only">Products</h2>
+          <div className="mt-4 sm:mt-2 mb-7 ">
+            <input
+              type="text"
+               value={searchQuery}
+               onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search products..."
+              className="p-2 border border-gray-300 rounded-md"
+            />
+          </div>
 
           <div className="grid gap-4 grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 bg-white">
             {currentItems?.map((product: Product) => (
