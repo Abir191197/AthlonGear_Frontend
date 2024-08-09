@@ -7,6 +7,7 @@ import Error404 from "../pages/Error404";
 import AllProducts from "../pages/AllProducts";
 import ManageProduct from "../pages/ManageProduct";
 import AllCategory from "../pages/AllCategory";
+import TrackOrder from "../pages/TrackOrder";
 
 
 
@@ -44,6 +45,11 @@ const routes = createBrowserRouter([
   {
     path: "/Products/MangeProduct",
     element: <ManageProduct></ManageProduct>,
+  },
+
+  {
+    path: "/Orders/TrackOrder",
+    element: <TrackOrder></TrackOrder>,
   },
 ]);
 

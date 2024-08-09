@@ -57,19 +57,19 @@ export default function Cart() {
       <Navbar />
       <div className="bg-white">
         <div className="mx-auto max-w-2xl px-4 pb-24 pt-16 sm:px-6 lg:max-w-7xl lg:px-8">
-          <h1 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
-            Shopping Cart
-          </h1>
           {cartItems.length === 0 ? (
-            <div className="mt-12 text-center">
-              <h2 className="text-xl font-medium text-gray-900">
-                Your cart is empty
-              </h2>
+            <div className="text-center flex flex-col items-center">
+              <h3 className="text-3xl font-semibold text-gray-900">
+                Your cart is empty.
+              </h3>
               <p className="mt-4 text-sm text-gray-600">
                 Looks like you haven't added anything to your cart yet.
               </p>
-              <button className="mt-20 px-6 py-2 bg-green-300 text-black font-bold uppercase tracking-wide rounded">
+              <button className="mt-4 px-6 py-2 bg-green-300 text-black font-bold uppercase tracking-wide rounded">
                 <Link to="/">Shop Now</Link>
+              </button>
+              <button className="mt-4 px-6 py-2 bg-gray-300 text-black font-bold uppercase tracking-wide rounded">
+                <Link to="/Orders/TrackOrder">Track Your Order</Link>
               </button>
             </div>
           ) : (

@@ -26,10 +26,10 @@ const deliveryMethods = [
 ];
 
 const paymentMethods = [
-  { id: "cash-on", title: "Cash on Delivery" },
-  { id: "credit-card", title: "Credit card (Unavailable Now)" },
-  { id: "paypal", title: "PayPal (Unavailable Now)" },
-  { id: "Bkash", title: "Bkash (Unavailable Now)" },
+  { id: 0, title: "Cash on Delivery" },
+  { id: 1, title: "Credit card (Unavailable Now)" },
+  { id: 2, title: "PayPal (Unavailable Now)" },
+  { id: 3, title: "Bkash (Unavailable Now)" },
 ];
 
 function classNames(...classes: string[]) {
@@ -40,6 +40,10 @@ export default function OrderSummary() {
   const [selectedDeliveryMethod, setSelectedDeliveryMethod] = useState(
     deliveryMethods[0]
   );
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState(
+    paymentMethods[0] // Corrected to paymentMethods
+  );
+
 
    const [sendOrderConfirmData, { isLoading}] =
     useSendOrderConfirmDataMutation();
@@ -106,6 +110,8 @@ export default function OrderSummary() {
       productId: item._id,
       title: item.title,
       quantity: item.quantity,
+      price: item.price,
+     imageLink: item.imageLink,
     }));
 
     const orderDetails = {
@@ -113,7 +119,9 @@ export default function OrderSummary() {
       deliveryMethod: selectedDeliveryMethod,
       contactForm,
       cartItems: cartItem,
+      paymentMethods:selectedPaymentMethod,
     };
+    console.log(orderDetails);
 
   try {
     await sendOrderConfirmData(orderDetails).unwrap();
@@ -182,7 +190,7 @@ export default function OrderSummary() {
                 <Link to="/">Shop Now</Link>
               </button>
               <button className="mt-4 px-6 py-2 bg-gray-300 text-black font-bold uppercase tracking-wide rounded">
-                <Link to="">Track Your Order</Link>
+                <Link to="/Orders/TrackOrder">Track Your Order</Link>
               </button>
             </div>
           ) : (
@@ -191,9 +199,15 @@ export default function OrderSummary() {
               className="lg:grid lg:grid-cols-2 lg:gap-x-12 xl:gap-x-16">
               <div>
                 <div>
+                  <p className="text-orange-500 font-semibold text-xl mb-6">
+                    ** Please provide a valid email address to receive your
+                    receipt and order details..
+                  </p>
+
                   <h2 className="text-lg font-medium text-gray-900">
                     Contact information
                   </h2>
+
                   <div className="mt-4">
                     <label
                       htmlFor="email-address"
@@ -566,31 +580,36 @@ export default function OrderSummary() {
                       Payment method
                     </legend>
                     <div className="mt-4 space-y-4">
-                      {paymentMethods.map((paymentMethod, paymentMethodIdx) => (
+                      {paymentMethods.map((paymentMethod) => (
                         <div
-                          key={paymentMethodIdx}
+                          key={paymentMethod.id}
                           className="flex items-center">
                           <input
-                            id={paymentMethod.id}
+                            id={paymentMethod.id.toString()} // Convert to string
                             name="payment-method"
                             type="radio"
-                            defaultChecked={paymentMethod.id === "cash-on"}
+                            value={paymentMethod.id.toString()} // Convert to string
+                            checked={
+                              selectedPaymentMethod.id === paymentMethod.id
+                            } // Compare ids
+                            onChange={() =>
+                              setSelectedPaymentMethod(paymentMethod)
+                            } // Pass the whole object
                             disabled={
-                              paymentMethod.id === "Bkash" ||
-                              paymentMethod.id === "paypal" ||
-                              paymentMethod.id === "credit-card"
+                              paymentMethod.id === 1 ||
+                              paymentMethod.id === 2 ||
+                              paymentMethod.id === 3
                             }
                             className={`h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-500 ${
-                              paymentMethod.id === "Bkash" ||
-                              paymentMethod.id === "paypal" ||
-                              paymentMethod.id === "credit-card"
+                              paymentMethod.id === 1 ||
+                              paymentMethod.id === 2 ||
+                              paymentMethod.id === 3
                                 ? "opacity-50 cursor-not-allowed"
                                 : ""
                             }`}
                           />
-
                           <label
-                            htmlFor={paymentMethod.id}
+                            htmlFor={paymentMethod.id.toString()} // Convert to string
                             className="ml-3 block text-sm font-medium text-gray-700">
                             {paymentMethod.title}
                           </label>

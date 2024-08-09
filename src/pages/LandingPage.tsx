@@ -6,6 +6,7 @@ import Footer from "./Footer";
 import HeroSection from "./HeroSection";
 import Navbar from "./Navbar";
 import Products from "./Products";
+import TrackOrder from "./TrackOrder";
 
 const LandingPage = () => {
   return (
@@ -22,10 +23,11 @@ const LandingPage = () => {
       <div id="AboutUs">
         <AboutUs></AboutUs>
       </div>
-      <div id="ContactUs">
+      <div id="ContactUs"> 
         <ContactUs></ContactUs>
-      </div>
       <Footer></Footer>
+      </div>
+      <TrackOrder></TrackOrder>
     </>
   );
 };

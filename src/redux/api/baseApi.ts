@@ -80,6 +80,9 @@ export const baseApi = createApi({
       }),
       invalidatesTags: ["createProduct"],
     }),
+    TrackOneOrder: builder.query({
+      query: (orderId) => `/orders/${orderId}`,
+    }),
   }),
 });
 
@@ -90,6 +93,7 @@ export const {
   useSendProductDetailsMutation,
   useDeleteProductMutation,
   useGetAllProductsWithSearchQuery,
-  useUpdateProductMutation
+  useUpdateProductMutation,
+  useTrackOneOrderQuery,
   
 } = baseApi;

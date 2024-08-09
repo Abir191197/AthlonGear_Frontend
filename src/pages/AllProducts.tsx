@@ -141,7 +141,7 @@ export default function AllProducts() {
               className="p-2 border border-gray-300 rounded-md"
             />
 
-            {/* Sort Dropdown */}
+           
             {/* Sort Dropdown */}
             <div>
               <Menu as="div" className="relative inline-block text-left">
