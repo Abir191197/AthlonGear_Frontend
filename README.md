@@ -3,7 +3,7 @@
 ### Sporting Goods small E-Commerce Website
 
 ## Overview
-A comprehensive e-commerce platform for sporting goods, catering to both customer and admin tasks.
+A comprehensive e-commerce platform for sporting goods
 
 ## Core Pages
 
@@ -58,6 +58,9 @@ A comprehensive e-commerce platform for sporting goods, catering to both custome
 	![TypeScript](https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white)
  ![Express.js](https://img.shields.io/badge/express.js-%23404d59.svg?style=for-the-badge&logo=express&logoColor=%2361DAFB)
 ![MongoDB](https://img.shields.io/badge/MongoDB-%234ea94b.svg?style=for-the-badge&logo=mongodb&logoColor=white)
+![Zod](https://img.shields.io/badge/zod-%233068b7.svg?style=for-the-badge&logo=zod&logoColor=white)
+![mongoose](https://img.shields.io/badge/Mongoose-563D7C?style=for-the-badge&logo=mongoose&logoColor=white)
+![Node Mailer](https://img.shields.io/badge/NodeMailer-114D7C?style=for-the-badge&logo=NodeMailer&logoColor=white)
 
 
 ## Backend Resource
