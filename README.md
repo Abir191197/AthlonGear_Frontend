@@ -1,30 +1,98 @@
-# React + TypeScript + Vite
+# Athlon Gear
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+### Sporting Goods small E-Commerce Website
 
-Currently, two official plugins are available:
+## Overview
+A comprehensive e-commerce platform for sporting goods, catering to both customer and admin tasks.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Core Pages
 
-## Expanding the ESLint configuration
+### 1. Navbar & Footer
+- **Navbar:** Logo, All Products, Manage Products, Cart, About Us.
+- **Footer:** Social media icons, essential page links.
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+### 2. Homepage
+- **Hero Section:** Carousel with discounts.
+- **Featured Section:** Latest products with details and "View Details" button.
+- **Category Section:** Filters products by category.
+- **Contact Us Section:** Form .
 
-- Configure the top-level `parserOptions` property like this:
+### 3. About Us
+- Company info, mission, vision, contact info, team, and store location.
 
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
+### 4. All Products
+- **Display:** All products with search, filters, and sorting options.
+
+
+### 5. Single Product
+- **Details:** Product info, image, Add to Cart button (duplicates increase quantity up to stock).
+
+### 6. Cart Page
+- **View Cart:** Products in cart, quantity management, and total price with 15% VAT.
+
+
+### 7. Checkout Page
+- **User Details:** Collect name, email, phone, and address.
+- **Payment Methods:** Cash on Delivery or Stripe (optional).
+- **Order Confirmation:** Sends an email with order details upon completion.
+
+### 8. Manage Products
+- **CRUD Operations:** Add, delete, update products with RTK Query.
+
+### Email Send
+- **Email Notifications:** Sends email with order details upon successful order placement 
+
+
+### 9. Track Order
+- **Track Order Page:** Allows users to track their orders using order ID.
+- **Order Status:** Displays status progress and order details.
+## Tech Stack
+### Client 
+![React](https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB)
+![Redux](https://img.shields.io/badge/redux-%23593d88.svg?style=for-the-badge&logo=redux&logoColor=white)
+![TypeScript](https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white)
+	![TailwindCSS](https://img.shields.io/badge/tailwindcss-%2338B2AC.svg?style=for-the-badge&logo=tailwind-css&logoColor=white)
+
+### Server
+NodeJS	![NodeJS](https://img.shields.io/badge/node.js-6DA55F?style=for-the-badge&logo=node.js&logoColor=white)
+	![TypeScript](https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white)
+ ![Express.js](https://img.shields.io/badge/express.js-%23404d59.svg?style=for-the-badge&logo=express&logoColor=%2361DAFB)
+![MongoDB](https://img.shields.io/badge/MongoDB-%234ea94b.svg?style=for-the-badge&logo=mongodb&logoColor=white)
+
+
+## Backend Resource
+
+- [AthlonGear_Backend](https://github.com/Abir191197/AthlonGear_Backend)
+
+
+## Deployment
+
+To Run this project run
+
+```bash
+  npm git clone GIT_REPO
 ```
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+```bash
+  npm run dev
+```
+
+## Logo
+![Logo](https://i.ibb.co/NKVHwMx/image.png)
+
+
+## Support
+
+For support, email ardhrubo908@gmail.com
+
+
+## License
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
+[![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+
+[![License](https://img.shields.io/badge/License-Boost_1.0-lightblue.svg)](https://www.boost.org/LICENSE_1_0.txt)
+
+[![License](https://img.shields.io/badge/License-BSD_3--Clause-blue.svg)](https://opensource.org/licenses/BSD-3-Clause)
+
