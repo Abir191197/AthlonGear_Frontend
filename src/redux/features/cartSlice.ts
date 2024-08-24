@@ -81,6 +81,8 @@ export const {
   IncreaseQuantity,
   DecreaseQuantity,
 } = cartSlice.actions;
+
+
 export default cartSlice.reducer;
 
 // Selector to get the number of items in the cart

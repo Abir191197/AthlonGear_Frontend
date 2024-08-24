@@ -1,19 +1,19 @@
-import { useState } from "react";
 import { RadioGroup } from "@headlessui/react";
 import { CheckCircleIcon, TrashIcon } from "@heroicons/react/20/solid";
+import { useState } from "react";
+import { SubmitHandler, useForm } from "react-hook-form";
 import { Link, ScrollRestoration } from "react-router-dom";
-import Navbar from "./Navbar";
-import { useAppDispatch, useAppSelector } from "../redux/hooks";
+import { ClipLoader } from "react-spinners";
+import { toast } from "react-toastify";
+import { useSendOrderConfirmDataMutation } from "../redux/api/baseApi";
 import {
   clearCart,
   DecreaseQuantity,
   IncreaseQuantity,
   removeItem,
 } from "../redux/features/cartSlice";
-import { toast } from "react-toastify";
-import { useForm, SubmitHandler } from "react-hook-form";
-import { useSendOrderConfirmDataMutation } from "../redux/api/baseApi";
-import { ClipLoader } from "react-spinners";
+import { useAppDispatch, useAppSelector } from "../redux/hooks";
+import Navbar from "./Navbar";
 
 const deliveryMethods = [
   {
@@ -27,9 +27,9 @@ const deliveryMethods = [
 
 const paymentMethods = [
   { id: 0, title: "Cash on Delivery" },
-  { id: 1, title: "Credit card (Unavailable Now)" },
+  { id: 1, title: "Bkash/Nagad/Visa Card" },
   { id: 2, title: "PayPal (Unavailable Now)" },
-  { id: 3, title: "Bkash (Unavailable Now)" },
+  { id: 3, title: "Stipe (Unavailable Now)" },
 ];
 
 function classNames(...classes: string[]) {
@@ -44,10 +44,9 @@ export default function OrderSummary() {
     paymentMethods[0] // Corrected to paymentMethods
   );
 
-
-   const [sendOrderConfirmData, { isLoading}] =
+  const [sendOrderConfirmData, { isLoading }] =
     useSendOrderConfirmDataMutation();
-  
+
   const dispatch = useAppDispatch();
 
   const handleIncreaseQuantity = (item: { _id: string }) => {
@@ -73,7 +72,6 @@ export default function OrderSummary() {
 
   // Get all cart items from cart slice in Redux
   const cartItems = useAppSelector((state) => state.cart.carts);
-
 
   const subtotal = cartItems.reduce(
     (total, item) => total + item.price * (item.quantity || 1),
@@ -104,14 +102,27 @@ export default function OrderSummary() {
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm<IFormInput>();
+  } = useForm<IFormInput>({
+    defaultValues: {
+      email: "example@gmail.com",
+      firstName: "abir",
+      lastName: "dhrubo",
+      Address: "dhaka",
+      Apartment: "1B",
+      City: "dhaka",
+      Country: "Bangladesh",
+      State: "dhaka",
+      Postal: "1212",
+      Phone: 1610108851,
+    },
+  });
   const onSubmit: SubmitHandler<IFormInput> = async (contactForm) => {
     const cartItem = cartItems.map((item) => ({
       productId: item._id,
       title: item.title,
       quantity: item.quantity,
       price: item.price,
-     imageLink: item.imageLink,
+      imageLink: item.imageLink,
     }));
 
     const orderDetails = {
@@ -119,57 +130,64 @@ export default function OrderSummary() {
       deliveryMethod: selectedDeliveryMethod,
       contactForm,
       cartItems: cartItem,
-      paymentMethods:selectedPaymentMethod,
+      paymentMethods: selectedPaymentMethod,
     };
-    console.log(orderDetails);
 
-  try {
-    await sendOrderConfirmData(orderDetails).unwrap();
+    try {
+      const res = await sendOrderConfirmData(orderDetails).unwrap();
+console.log(orderDetails.paymentMethods.title);
+console.log(res);
+      if (
+        orderDetails.paymentMethods.title === "Bkash/Nagad/Visa Card" &&
+        res.success === true
+      ) {
+        window.location.href = res.data.payment_url;
+      }
+      
 
-    toast.success("Order placed successfully!", {
-      position: "top-center",
-      autoClose: 3000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      theme: "light",
-    });
-  } catch (error) {
-    toast.error(`Failed to confirm order: ${error}`, {
-      position: "top-center",
-      autoClose: 3000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      theme: "light",
-    });
-  }
+      toast.success("Order placed successfully!", {
+        position: "top-center",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        theme: "light",
+      });
+    } catch (error) {
+      toast.error(`Failed to confirm order: ${error}`, {
+        position: "top-center",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        theme: "light",
+      });
+    }
 
     reset();
     dispatch(clearCart());
-   
   };
-    
-   if (isLoading) {
-     return (
-       <div
-         style={{
-           display: "flex",
-           justifyContent: "center",
-           alignItems: "center",
-           height: "100vh",
-         }}>
-         <ClipLoader
-           size={20}
-           aria-label="Loading Spinner"
-           data-testid="loader"
-         />
-       </div>
-     );
-   }
-    
+
+  if (isLoading) {
+    return (
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+        }}>
+        <ClipLoader
+          size={20}
+          aria-label="Loading Spinner"
+          data-testid="loader"
+        />
+      </div>
+    );
+  }
+
   return (
     <>
       <ScrollRestoration />
@@ -596,14 +614,10 @@ export default function OrderSummary() {
                               setSelectedPaymentMethod(paymentMethod)
                             } // Pass the whole object
                             disabled={
-                              paymentMethod.id === 1 ||
-                              paymentMethod.id === 2 ||
-                              paymentMethod.id === 3
+                              paymentMethod.id === 2 || paymentMethod.id === 3
                             }
                             className={`h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-500 ${
-                              paymentMethod.id === 1 ||
-                              paymentMethod.id === 2 ||
-                              paymentMethod.id === 3
+                              paymentMethod.id === 2 || paymentMethod.id === 3
                                 ? "opacity-50 cursor-not-allowed"
                                 : ""
                             }`}
